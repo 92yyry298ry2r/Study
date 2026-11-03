@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySystem - 5-Day Study System</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-page: #E6E1FF;
+            --bg-shell: #FFFFFF;
+            --bg-sidebar: #FAFAFA;
+            --bg-card: #FFFFFF;
+            --border: #EEEEF4;
+            --text-main: #0B0B14;
+            --text-muted: #8A8A99;
+            --primary-purple: #5B36F2;
+            --active-blue: #2F7DF6;
+            --orange-accent: #F5780F;
+            --badge-blue-bg: #D9EEFF;
+            --badge-blue-text: #1478F5;
+            --badge-orange-bg: #FFF0E0;
+            --badge-orange-text: #F57A0A;
+            --badge-purple-bg: #ECE8FF;
+            --badge-purple-text: #5B36F2;
+        }
+
+        .dark {
+            --bg-page: #14112B;
+            --bg-shell: #1B1833;
+            --bg-sidebar: #171429;
+            --bg-card: #221F40;
+            --border: #2E2A55;
+            --text-main: #F4F3FF;
+            --text-muted: #A09DBF;
+            --primary-purple: #7B5CFF;
+            --badge-blue-bg: rgba(20, 120, 245, 0.2);
+            --badge-blue-text: #60A5FA;
+            --badge-orange-bg: rgba(245, 122, 10, 0.2);
+            --badge-orange-text: #FDBA74;
+            --badge-purple-bg: rgba(123, 92, 255, 0.2);
+            --badge-purple-text: #A78BFA;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            transition: all 0.2s ease-in-out;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .app-shell {
+            background-color: var(--bg-shell);
+            border-radius: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            display: flex;
+            height: calc(100vh - 48px);
+            margin: 24px;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 32px 16px;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background-color: var(--bg-shell);
+        }
+
+        .top-bar {
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-shell);
+            z-index: 30;
+        }
+
+        .content-area {
+            padding: 40px;
+            flex: 1;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 999px;
+            margin-bottom: 4px;
+            transition: all 0.2s;
+            cursor: pointer;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .nav-item.active {
+            background-color: var(--active-blue);
+            color: #FFFFFF;
+        }
+
+        .nav-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: #EEEEF4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            transition: all 0.2s;
+        }
+
+        .dark .nav-item-icon { background-color: #2E2A55; }
+        .nav-item.active .nav-item-icon { background-color: rgba(255, 255, 255, 0.2); }
+
+        .search-pill {
+            background-color: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 4px 4px 4px 20px;
+            display: flex;
+            align-items: center;
+            width: 400px;
+        }
+
+        .dark .search-pill { background-color: #221F40; }
+
+        .btn-pill {
+            padding: 12px 28px;
+            border-radius: 999px;
+            font-weight: 700;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-purple);
+            color: #FFFFFF;
+            box-shadow: 0 8px 20px rgba(91, 54, 242, 0.2);
+        }
+
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(91, 54, 242, 0.3); }
+
+        .btn-black { background-color: #0B0B14; color: #FFFFFF; }
+        .btn-black:hover { opacity: 0.9; }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-blue { background-color: var(--badge-blue-bg); color: var(--badge-blue-text); }
+        .badge-orange { background-color: var(--badge-orange-bg); color: var(--badge-orange-text); }
+        .badge-purple { background-color: var(--badge-purple-bg); color: var(--badge-purple-text); }
+
+        .topic-table th {
+            text-align: left;
+            padding: 20px 24px;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topic-table td { padding: 24px; border-bottom: 1px solid var(--border); }
+        .topic-table tr:last-child td { border-bottom: none; }
+
+        .custom-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2.5px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .custom-checkbox.checked { background-color: var(--primary-purple); border-color: var(--primary-purple); }
+
+        .flashcard-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            height: 420px;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .flashcard-inner.flipped { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back {
+            backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            border-radius: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+        }
+        .flashcard-back { transform: rotateY(180deg); background-color: var(--badge-purple-bg); color: var(--text-main); }
+
+        @media (max-width: 1024px) {
+            .app-shell { margin: 0; height: 100vh; border-radius: 0; flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: fixed; bottom: 0; left: 0; z-index: 50; flex-direction: row; padding: 10px; justify-content: space-around; border-top: 1px solid var(--border); }
+            .sidebar .logo, .sidebar .section-label, .sidebar .flex-1 > div:last-child { display: none; }
+            .nav-item { flex-direction: column; padding: 6px; margin: 0; border-radius: 12px; gap: 4px; }
+            .nav-item-icon { margin-right: 0; width: 28px; height: 28px; }
+            .nav-item span { font-size: 9px; font-weight: 700; }
+            .main-content { padding-bottom: 80px; }
+            .top-bar { padding: 12px 20px; flex-direction: column; gap: 12px; height: auto; position: relative; top: 0; }
+            .search-pill { width: 100%; }
+            .content-area { padding: 24px 16px; }
+        }
+
+        .main-content::-webkit-scrollbar { display: none; }
+        .main-content { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        const studyData = {
+            topics: [
+                {
+                    id: 'num_theory', title: 'Number Theory', category: 'Math', priority: 'high',
+                    overview: 'Study of integers and their properties. Focuses on divisibility, primes, and factors.',
+                    concepts: ['Divisibility rules (2,3,4,5,6,9)', 'Primes (only even is 2)', 'GCF/LCM', 'Product = GCF * LCM'],
+                    examples: ['GCF of 12, 18 is 6', 'LCM of 4, 6 is 12'],
+                    mnemonics: 'GCF is Greatest Smallest; LCM is Least Biggest.',
+                    questions: [
+                        { q: 'Which is a prime number?', a: ['9', '15', '21', '23'], c: 3, e: '23 has no factors other than 1 and itself.' },
+                        { q: 'GCF of 24 and 36?', a: ['6', '12', '18', '24'], c: 1, e: '12 is the largest number dividing both.' },
+                        { q: 'LCM of 15 and 20?', a: ['30', '45', '60', '75'], c: 2, e: '60 is the smallest multiple of both.' },
+                        { q: 'Sum of first 5 primes?', a: ['25', '26', '27', '28'], c: 3, e: '2+3+5+7+11 = 28.' },
+                        { q: 'Is 123 divisible by 3?', a: ['Yes', 'No'], c: 0, e: 'Sum of digits 1+2+3=6, which is div by 3.' },
+                        { q: 'Which is composite?', a: ['2', '3', '7', '9'], c: 3, e: '9 has factors 1, 3, 9.' },
+                        { q: 'Smallest even prime?', a: ['0', '1', '2', '4'], c: 2, e: '2 is the only even prime.' },
+                        { q: 'GCF of 7 and 11?', a: ['1', '7', '11', '77'], c: 0, e: 'They are relatively prime.' },
+                        { q: 'Divisibility rule for 4?', a: ['Sum of digits', 'Last digit even', 'Last two digits', 'Ends in 0'], c: 2, e: 'Check last two digits.' },
+                        { q: 'If GCF=4 and LCM=24, product is?', a: ['48', '96', '12', '6'], c: 1, e: 'Product = GCF * LCM = 4 * 24 = 96.' }
+                    ],
+                    flashcards: [
+                        { f: 'Only even prime?', b: '2' },
+                        { f: 'Divisibility by 3 rule?', b: 'Sum of digits divisible by 3' },
+                        { f: 'Product of two numbers = ?', b: 'GCF * LCM' }
+                    ]
+                },
+                {
+                    id: 'factoring', title: 'Factoring Polynomials', category: 'Math', priority: 'high',
+                    overview: 'Breaking expressions into products. Core for solving equations.',
+                    concepts: ['Difference of Squares', 'Perfect Square Trinomials', 'Sum/Diff of Cubes', 'SOAP rule'],
+                    examples: ['x^2 - 9 = (x-3)(x+3)', 'x^2 + 6x + 9 = (x+3)^2'],
+                    mnemonics: 'SOAP: Same, Opposite, Always Positive (for cubes).',
+                    questions: [
+                        { q: 'Factor x^2 - 16', a: ['(x-4)^2', '(x+4)^2', '(x-4)(x+4)', '(x-8)(x+2)'], c: 2, e: 'Difference of squares.' },
+                        { q: 'Factor x^2 + 5x + 6', a: ['(x+1)(x+6)', '(x+2)(x+3)', '(x+5)(x+1)', '(x-2)(x-3)'], c: 1, e: '2+3=5, 2*3=6.' },
+                        { q: 'Factor x^3 + 8', a: ['(x+2)(x^2-2x+4)', '(x+2)^3', '(x-2)(x^2+2x+4)', '(x+2)(x^2+2x+4)'], c: 0, e: 'Sum of cubes: (a+b)(a^2-ab+b^2).' },
+                        { q: 'Factor 4x^2 - 25', a: ['(4x-5)(4x+5)', '(2x-5)^2', '(2x-5)(2x+5)', '(2x+5)^2'], c: 2, e: 'Difference of squares: (2x)^2 - 5^2.' },
+                        { q: 'Factor x^2 - 6x + 9', a: ['(x-3)(x+3)', '(x-3)^2', '(x+3)^2', '(x-9)(x-1)'], c: 1, e: 'Perfect square trinomial.' },
+                        { q: 'Factor out GCF: 2x^2 + 4x', a: ['2(x^2+2x)', 'x(2x+4)', '2x(x+2)', '4x(x+0.5)'], c: 2, e: '2x is common.' },
+                        { q: 'Factor x^2 - 7x + 10', a: ['(x-2)(x-5)', '(x+2)(x+5)', '(x-1)(x-10)', '(x+1)(x+10)'], c: 0, e: '-2 + -5 = -7.' },
+                        { q: 'Factor x^3 - 1', a: ['(x-1)(x^2+x+1)', '(x-1)^3', '(x+1)(x^2-x+1)', '(x-1)(x^2-x-1)'], c: 0, e: 'Diff of cubes: (a-b)(a^2+ab+b^2).' },
+                        { q: 'Factor x^2 + x - 6', a: ['(x+3)(x-2)', '(x-3)(x+2)', '(x+6)(x-1)', '(x-6)(x+1)'], c: 0, e: '3 + -2 = 1, 3 * -2 = -6.' },
+                        { q: 'Is x^2 + 4 factorable in reals?', a: ['Yes', 'No'], c: 1, e: 'Sum of squares is not factorable in reals.' }
+                    ],
+                    flashcards: [
+                        { f: 'a^2 - b^2 = ?', b: '(a-b)(a+b)' },
+                        { f: 'a^3 + b^3 signs (SOAP)?', b: '+, -, +' },
+                        { f: '(a+b)^2 = ?', b: 'a^2 + 2ab + b^2' }
+                    ]
+                },
+                {
+                    id: 'logs', title: 'Logs & Exponents', category: 'Math', priority: 'high',
+                    overview: 'Converting between power form and log form. Essential for growth/decay problems.',
+                    concepts: ['b^x = y <=> log_b y = x', 'Product/Quotient rules', 'Power rule', 'ln vs log'],
+                    examples: ['2^3 = 8 => log_2 8 = 3', 'log x + log y = log(xy)'],
+                    mnemonics: 'The base stays the base.',
+                    questions: [
+                        { q: 'Value of log_2 32?', a: ['3', '4', '5', '6'], c: 2, e: '2^5 = 32.' },
+                        { q: 'Value of log_10 1?', a: ['0', '1', '10', 'undefined'], c: 0, e: 'Any base log 1 is 0.' },
+                        { q: 'Solve 3^x = 81', a: ['2', '3', '4', '5'], c: 2, e: '3^4 = 81.' },
+                        { q: 'log A - log B = ?', a: ['log(A-B)', 'log(A/B)', 'log(AB)', 'log(A+B)'], c: 1, e: 'Quotient rule.' },
+                        { q: 'log_b b = ?', a: ['0', '1', 'b', 'undefined'], c: 1, e: 'Identity property.' },
+                        { q: '2 log x is?', a: ['log 2x', 'log x^2', 'log(x+2)', '2x'], c: 1, e: 'Power rule.' },
+                        { q: 'Value of ln e?', a: ['0', '1', 'e', '10'], c: 1, e: 'ln is log base e.' },
+                        { q: 'Solve log_x 25 = 2', a: ['2', '5', '10', '25'], c: 1, e: 'x^2 = 25.' },
+                        { q: 'Convert 5^2 = 25 to log', a: ['log_2 25=5', 'log_5 2=25', 'log_5 25=2', 'log_25 5=2'], c: 2, e: 'Base stays base.' },
+                        { q: 'log(100) = ?', a: ['1', '2', '3', '10'], c: 1, e: 'Common log base 10.' }
+                    ],
+                    flashcards: [
+                        { f: 'log_b 1 = ?', b: '0' },
+                        { f: 'log(MN) = ?', b: 'log M + log N' },
+                        { f: 'ln x base?', b: 'e (approx 2.718)' }
+                    ]
+                },
+                {
+                    id: 'trig', title: 'Trigonometry', category: 'Math', priority: 'high',
+                    overview: 'Triangle ratios and Unit Circle identities.',
+                    concepts: ['SOH CAH TOA', 'Pythagorean Identity', 'ASTC signs', 'Reciprocals'],
+                    examples: ['sin^2 + cos^2 = 1', 'tan = sin/cos'],
+                    mnemonics: 'All Students Take Calculus (Quadrants I-IV signs).',
+                    questions: [
+                        { q: 'sin^2 x + cos^2 x = ?', a: ['0', '1', 'tan x', 'sec x'], c: 1, e: 'Fundamental Pythagorean identity.' },
+                        { q: 'tan x in terms of sin/cos?', a: ['cos/sin', '1/sin', 'sin/cos', 'sin*cos'], c: 2, e: 'Definition of tangent.' },
+                        { q: 'sin 30 degrees?', a: ['0', '0.5', '0.707', '1'], c: 1, e: 'Key Unit Circle value.' },
+                        { q: 'Reciprocal of cos?', a: ['sin', 'csc', 'sec', 'cot'], c: 2, e: 'sec = 1/cos.' },
+                        { q: 'cos 90 degrees?', a: ['0', '1', '-1', 'undefined'], c: 0, e: 'At 90, x-coord is 0.' },
+                        { q: 'tan 45 degrees?', a: ['0', '0.5', '1', 'undefined'], c: 2, e: 'sin 45 = cos 45.' },
+                        { q: 'Quadrant where sin is pos, cos is neg?', a: ['I', 'II', 'III', 'IV'], c: 1, e: 'II (All Students...).' },
+                        { q: 'If sin = 3/5, what is csc?', a: ['3/5', '4/5', '5/3', '5/4'], c: 2, e: 'csc = 1/sin.' },
+                        { q: '180 degrees in radians?', a: ['pi/2', 'pi', '2pi', '3pi/2'], c: 1, e: 'Standard conversion.' },
+                        { q: 'sec^2 x - tan^2 x = ?', a: ['0', '1', '-1', 'sin x'], c: 1, e: 'Derived identity.' }
+                    ],
+                    flashcards: [
+                        { f: 'sin/cos = ?', b: 'tan' },
+                        { f: 'sec reciprocal?', b: 'cos' },
+                        { f: 'sin 90 deg?', b: '1' }
+                    ]
+                },
+                {
+                    id: 'stats_basics', title: 'Central Tendency', category: 'Stats', priority: 'high',
+                    overview: 'Mean, Median, and Mode. Basic descriptive stats.',
+                    concepts: ['Mean: Average', 'Median: Middle', 'Mode: Most frequent', 'Outliers effect'],
+                    examples: ['Median of 1, 2, 10 is 2', 'Mode of 2, 2, 3 is 2'],
+                    mnemonics: 'Mean is average, Median is middle, Mode is most.',
+                    questions: [
+                        { q: 'Best measure for income with outliers?', a: ['Mean', 'Median', 'Mode', 'Range'], c: 1, e: 'Median is robust to extremes.' },
+                        { q: 'Mean of 2, 4, 6, 8?', a: ['4', '5', '6', '20'], c: 1, e: '20/4 = 5.' },
+                        { q: 'Median of 5, 2, 9, 1, 7?', a: ['2', '5', '7', '9'], c: 1, e: 'Sorted: 1, 2, 5, 7, 9. Middle is 5.' },
+                        { q: 'Dataset with two modes is?', a: ['Unimodal', 'Bimodal', 'Multimodal', 'Amodal'], c: 1, e: 'Bi = two.' },
+                        { q: 'If all values same, mean is?', a: ['0', 'The value', '1', 'Undefined'], c: 1, e: 'Average of same is same.' },
+                        { q: 'Median of 1, 2, 3, 4?', a: ['2', '2.5', '3', '3.5'], c: 1, e: 'Avg of 2 and 3.' },
+                        { q: 'Effect of extreme outlier on Median?', a: ['Big effect', 'Little/No effect', 'Makes it 0', 'Doubles it'], c: 1, e: 'Median only cares about order.' },
+                        { q: 'Sum of deviations from mean is?', a: ['0', '1', 'n', 'Variance'], c: 0, e: 'Mathematical property of mean.' },
+                        { q: 'Mode of 1, 2, 3?', a: ['1', '2', '3', 'None'], c: 3, e: 'All unique.' },
+                        { q: 'Mean of first 5 odd numbers?', a: ['3', '4', '5', '6'], c: 2, e: '1,3,5,7,9 avg is 5.' }
+                    ],
+                    flashcards: [
+                        { f: 'Sensitive to outliers?', b: 'Mean' },
+                        { f: '50th percentile?', b: 'Median' },
+                        { f: 'Bimodal meaning?', b: 'Two modes' }
+                    ]
+                },
+                {
+                    id: 'hypothesis', title: 'Hypothesis Testing', category: 'Stats', priority: 'high',
+                    overview: 'Making decisions about populations using samples.',
+                    concepts: ['Null (H0) vs Alt (Ha)', 'P-value < alpha: Reject', 'Type I (alpha) error', 'Type II (beta) error'],
+                    examples: ['p=0.01, alpha=0.05 => Reject', 'Type I: Rejecting true H0'],
+                    mnemonics: 'If the P is low, the Null must go!',
+                    questions: [
+                        { q: 'Null hypothesis (H0) usually assumes?', a: ['A big change', 'No effect/Difference', 'The scientist is right', 'p < 0.05'], c: 1, e: 'Status quo.' },
+                        { q: 'Type I error is?', a: ['Rejecting false H0', 'Rejecting true H0', 'Accepting true H0', 'Accepting false H0'], c: 1, e: 'False Positive.' },
+                        { q: 'Decision if p = 0.02 and alpha = 0.05?', a: ['Reject H0', 'Fail to reject H0', 'Accept Ha', 'Need more data'], c: 0, e: 'p < alpha.' },
+                        { q: 'Alpha (sig level) is usually?', a: ['0.01', '0.05', '0.10', 'Any of these'], c: 3, e: 'Depends on field, 0.05 common.' },
+                        { q: 'Type II error is?', a: ['False Alarm', 'Missed effect', 'Correct decision', 'alpha'], c: 1, e: 'False Negative.' },
+                        { q: 'Ha: mu > 50 is a?', a: ['One-tailed test', 'Two-tailed test', 'No-tailed test', 'Z-test'], c: 0, e: 'Directional.' },
+                        { q: 'H0 always contains?', a: ['>', '<', '!=', '='], c: 3, e: 'H0 is the equality.' },
+                        { q: 'If you decrease alpha, Type II error?', a: ['Decreases', 'Increases', 'Stays same', 'Goes to 0'], c: 1, e: 'Trade-off.' },
+                        { q: 'Z-score formula?', a: '(x-mu)/sigma', b: '(mu-x)/sigma', c: 'x/sigma', d: 'sigma/x', c: 0, e: 'Distance in std devs.' },
+                        { q: 'Standard normal mean is?', a: ['1', '0', '0.5', '100'], c: 1, e: 'Z-dist center is 0.' }
+                    ],
+                    flashcards: [
+                        { f: 'Type I Error name?', b: 'Alpha (False Positive)' },
+                        { f: 'Type II Error name?', b: 'Beta (False Negative)' },
+                        { f: 'p-value < alpha means?', b: 'Reject Null Hypothesis' }
+                    ]
+                },
+                {
+                    id: 'photosynthesis', title: 'Photosynthesis', category: 'Science', priority: 'high',
+                    overview: 'Energy conversion in plants. Light vs Dark reactions.',
+                    concepts: ['Thylakoid: Light Rxn', 'Stroma: Calvin Cycle', 'Products: O2, Glucose', 'Equation'],
+                    examples: ['Oxygen comes from H2O', 'Glucose uses CO2'],
+                    mnemonics: 'Stroma = Space (Calvin happens in the space).',
+                    questions: [
+                        { q: 'Main product of Calvin Cycle?', a: ['Oxygen', 'ATP', 'Glucose', 'Water'], c: 2, e: 'Sugar production.' },
+                        { q: 'Where do light reactions occur?', a: ['Stroma', 'Thylakoid', 'Nucleus', 'Mitochondria'], c: 1, e: 'Stacks in chloroplast.' },
+                        { q: 'Gas required for photosynthesis?', a: ['O2', 'CO2', 'N2', 'H2'], c: 1, e: 'Plants breathe in CO2.' },
+                        { q: 'Source of oxygen waste?', a: ['CO2', 'Glucose', 'H2O', 'ATP'], c: 2, e: 'Photolysis of water.' },
+                        { q: 'Pigment that absorbs light?', a: ['Hemoglobin', 'Melanin', 'Chlorophyll', 'Carotene'], c: 2, e: 'Green pigment.' },
+                        { q: 'Calvin Cycle location?', a: ['Thylakoid', 'Stroma', 'Cytoplasm', 'Wall'], c: 1, e: 'Fluid outside thylakoids.' },
+                        { q: 'Color reflected by chlorophyll?', a: ['Red', 'Blue', 'Green', 'Yellow'], c: 2, e: 'Green light is not absorbed.' },
+                        { q: 'Product of light reaction used in Calvin?', a: ['O2', 'Glucose', 'ATP & NADPH', 'CO2'], c: 2, e: 'Energy carriers.' },
+                        { q: 'Primary energy source?', a: ['Soil', 'Water', 'Sunlight', 'Air'], c: 2, e: 'Photons.' },
+                        { q: 'Organelle for photosynthesis?', a: ['Mitochondria', 'Chloroplast', 'Vacuole', 'Ribosome'], c: 1, e: 'Specific to plants/algae.' }
+                    ],
+                    flashcards: [
+                        { f: 'Light Rxn location?', b: 'Thylakoid' },
+                        { f: 'Calvin Cycle location?', b: 'Stroma' },
+                        { f: 'Gas output?', b: 'Oxygen (O2)' }
+                    ]
+                },
+                {
+                    id: 'mol_bio', title: 'Molecular Biology', category: 'Science', priority: 'high',
+                    overview: 'DNA, RNA, and protein basics.',
+                    concepts: ['A-T, C-G (DNA)', 'A-U, C-G (RNA)', 'Chargaff Rule', 'Vacuole: Storage'],
+                    examples: ['20% A = 20% T', 'Transcription = DNA to RNA'],
+                    mnemonics: 'Apples in Tree, Cars in Garage.',
+                    questions: [
+                        { q: 'Base paired with Adenine in DNA?', a: ['Cytosine', 'Guanine', 'Thymine', 'Uracil'], c: 2, e: 'A-T.' },
+                        { q: 'If DNA has 15% C, how much G?', a: ['15%', '35%', '70%', '85%'], c: 0, e: 'C=G.' },
+                        { q: 'Organelle for storage in plants?', a: ['Nucleus', 'Vacuole', 'Ribosome', 'Lysosome'], c: 1, e: 'Large central vacuole.' },
+                        { q: 'RNA base instead of Thymine?', a: ['Adenine', 'Cytosine', 'Guanine', 'Uracil'], c: 3, e: 'U replaces T.' },
+                        { q: 'DNA to RNA process?', a: ['Translation', 'Transcription', 'Replication', 'Mutation'], c: 1, e: 'Scripting the message.' },
+                        { q: 'Sugar in RNA?', a: ['Glucose', 'Deoxyribose', 'Ribose', 'Sucrose'], c: 2, e: 'Ribonucleic Acid.' },
+                        { q: 'DNA structure is a?', a: ['Single helix', 'Double helix', 'Triple helix', 'Sphere'], c: 1, e: 'Watson & Crick.' },
+                        { q: 'RNA to Protein process?', a: ['Transcription', 'Translation', 'Digestion', 'Mitosis'], c: 1, e: 'Decoding the message.' },
+                        { q: 'Where is DNA kept in eukaryotes?', a: ['Cytoplasm', 'Nucleus', 'Vacuole', 'Wall'], c: 1, e: 'Control center.' },
+                        { q: 'If 30% A, how much C?', a: ['20%', '30%', '40%', '70%'], c: 0, e: 'A+T=60%, so C+G=40%, C=20%.' }
+                    ],
+                    flashcards: [
+                        { f: 'A pairs with (DNA)?', b: 'T' },
+                        { f: 'A pairs with (RNA)?', b: 'U' },
+                        { f: 'Storage organelle?', b: 'Vacuole' }
+                    ]
+                },
+                {
+                    id: 'kinematics', title: 'Kinematics & Force', category: 'Science', priority: 'high',
+                    overview: 'Motion and Newton\'s Laws.',
+                    concepts: ['F = ma', 'v = u + at', 'Displacement vs Distance', 'Acceleration'],
+                    examples: ['F = 5kg * 2m/s^2 = 10N', 'Starts from rest => u=0'],
+                    mnemonics: 'Force makes apples (F=ma).',
+                    questions: [
+                        { q: 'Unit of Force?', a: ['Joule', 'Watt', 'Newton', 'Pascal'], c: 2, e: 'Named after Isaac Newton.' },
+                        { q: 'Newton\'s 2nd Law formula?', a: ['F = m/a', 'F = ma', 'F = v/t', 'F = ms'], c: 1, e: 'Force equals mass times acceleration.' },
+                        { q: 'Acceleration if v goes 0 to 10 in 2s?', a: ['2', '5', '10', '20'], c: 1, e: '10/2 = 5.' },
+                        { q: 'Object "at rest" has u = ?', a: ['0', '1', '9.8', 'Undefined'], c: 0, e: 'Zero initial velocity.' },
+                        { q: 'Gravity on Earth (approx)?', a: ['5', '9.8', '12', '32'], c: 1, e: 'Standard m/s^2.' },
+                        { q: 'Vector quantity?', a: ['Distance', 'Speed', 'Mass', 'Velocity'], c: 3, e: 'Has magnitude and direction.' },
+                        { q: 'Force to move 10kg at 3 m/s^2?', a: ['3.33', '7', '13', '30'], c: 3, e: '10 * 3 = 30.' },
+                        { q: 'Slope of distance-time graph?', a: ['Acceleration', 'Velocity', 'Force', 'Mass'], c: 1, e: 'Rate of change of position.' },
+                        { q: 'Law of Inertia is Newton\'s?', a: ['1st', '2nd', '3rd', '4th'], c: 0, e: 'Objects stay at rest/motion.' },
+                        { q: 'v = u + at. If u=5, a=2, t=3, v=?', a: ['10', '11', '13', '15'], c: 1, e: '5 + 2*3 = 11.' }
+                    ],
+                    flashcards: [
+                        { f: 'F = ?', b: 'ma' },
+                        { f: 'g value?', b: '9.8 m/s^2' },
+                        { f: 'Velocity slope?', b: 'Acceleration' }
+                    ]
+                },
+                {
+                    id: 'planets', title: 'Planets & Earth', category: 'Science', priority: 'high',
+                    overview: 'Solar system facts and geology.',
+                    concepts: ['Densest: Earth', 'Most eccentric: Mercury', 'Mohs Scale', 'Plate boundaries'],
+                    examples: ['Hardest mineral: Diamond (10)', 'Boundary: Divergent (apart)'],
+                    mnemonics: 'Divergent = Divide.',
+                    questions: [
+                        { q: 'Densest planet?', a: ['Mercury', 'Earth', 'Jupiter', 'Saturn'], c: 1, e: 'Earth is most dense.' },
+                        { q: 'Planet with most eccentric orbit?', a: ['Earth', 'Mars', 'Mercury', 'Neptune'], c: 2, e: 'Mercury has most oval orbit.' },
+                        { q: 'Mohs scale measures?', a: ['Density', 'Hardness', 'Temperature', 'Gravity'], c: 1, e: 'Mineral scratch resistance.' },
+                        { q: 'Softest mineral (Mohs 1)?', a: ['Quartz', 'Talc', 'Gypsum', 'Diamond'], c: 1, e: 'Talc is easiest to scratch.' },
+                        { q: 'Plate boundary moving apart?', a: ['Convergent', 'Divergent', 'Transform', 'Subduction'], c: 1, e: 'Divide = Divergent.' },
+                        { q: 'San Andreas fault type?', a: ['Normal', 'Reverse', 'Strike-slip', 'Thrust'], c: 2, e: 'Transform/Shear.' },
+                        { q: 'Hottest planet?', a: ['Mercury', 'Venus', 'Mars', 'Jupiter'], c: 1, e: 'Thick CO2 atmosphere.' },
+                        { q: 'Red planet?', a: ['Venus', 'Mars', 'Jupiter', 'Saturn'], c: 1, e: 'Iron oxide on surface.' },
+                        { q: 'Largest planet?', a: ['Saturn', 'Uranus', 'Jupiter', 'Neptune'], c: 2, e: 'Gas giant leader.' },
+                        { q: 'Hardest mineral (Mohs 10)?', a: ['Topaz', 'Ruby', 'Diamond', 'Steel'], c: 2, e: 'Diamond is peak hardness.' }
+                    ],
+                    flashcards: [
+                        { f: 'Densest planet?', b: 'Earth' },
+                        { f: 'Most eccentric orbit?', b: 'Mercury' },
+                        { f: 'Mohs 1?', b: 'Talc' }
+                    ]
+                }
+            ],
+            planner: [
+                { day: 1, task: 'Learn Math: Number Theory, Factoring, Logs', done: false },
+                { day: 2, task: 'Learn Science: Photosynthesis, DNA, Kinematics', done: false },
+                { day: 3, task: 'Practice Quizzes for all topics', done: false },
+                { day: 4, task: 'Mock Exam & Review Weak Spots', done: false },
+                { day: 5, task: 'Quick Recall & Cheat Sheet Review', done: false }
+            ]
+        };
+
+        const Icon = React.memo(({ name, className = "w-5 h-5", size = 20 }) => {
+            const iconRef = React.useRef(null);
+            useEffect(() => {
+                if (window.lucide && iconRef.current) {
+                    window.lucide.createIcons({
+                        attrs: {
+                            class: className,
+                            style: `width: ${size}px; height: ${size}px;`
+                        },
+                        nameAttr: 'data-lucide',
+                        icons: { [name]: window.lucide.icons[name] }
+                    });
+                }
+            }, [name, className, size]);
+            return <i ref={iconRef} data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
+        });
+
+        const LogoIcon = React.memo(() => (
+            <div className="w-10 h-10 bg-[#5B36F2] rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-white" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 3l1.912 5.885h6.19l-5.008 3.638 1.912 5.885-5.007-3.638-5.007 3.638 1.912-5.885-5.008-3.638h6.19L12 3z" fill="currentColor"/>
+                </svg>
+            </div>
+        ));
+
+        const NavItem = React.memo(({ icon, label, active, onClick, badge }) => (
+            <div onClick={onClick} className={`nav-item ${active ? 'active' : ''}`}>
+                <div className="nav-item-icon"><Icon name={icon} size={18} /></div>
+                <span className="flex-1">{label}</span>
+                {badge > 0 && <span className="w-5 h-5 bg-[#F5780F] text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-bounce">{badge}</span>}
+            </div>
+        ));
+
+        const Sidebar = React.memo(({ currentView, setCurrentView, weakSpots, isDarkMode, setIsDarkMode }) => (
+            <aside className="sidebar">
+                <div className="logo flex items-center gap-3 px-4 mb-10"><LogoIcon /><span className="text-xl font-extrabold tracking-tight">StudySystem</span></div>
+                <div className="flex-1 overflow-y-auto space-y-8">
+                    <div>
+                        <div className="section-label text-[10px] font-bold text-[var(--text-muted)] tracking-[0.2em] mb-4 px-4 uppercase">DAILY USE</div>
+                        <NavItem active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} icon="layout" label="Overview" />
+                        <NavItem active={currentView === 'library'} onClick={() => setCurrentView('library')} icon="book-open" label="Topic Library" />
+                        <NavItem active={currentView === 'flashcards'} onClick={() => setCurrentView('flashcards')} icon="layers" label="Flashcards" />
+                        <NavItem active={currentView === 'quiz'} onClick={() => { if (!quizState.questions.length || quizState.isFinished) startQuiz(null); else setCurrentView('quiz'); }} icon="graduation-cap" label="Quiz" />
+                        <NavItem active={currentView === 'mock'} onClick={() => setCurrentView('mock')} icon="timer" label="Mock Exam" />
+                        <NavItem active={currentView === 'weak'} onClick={() => setCurrentView('weak')} icon="alert-circle" label="Weak Spots" badge={new Set(weakSpots).size} />
+                    </div>
+                    <div>
+                        <div className="section-label text-[10px] font-bold text-[var(--text-muted)] tracking-[0.2em] mb-4 px-4 uppercase">OTHERS</div>
+                        <NavItem active={currentView === 'cheat'} onClick={() => setCurrentView('cheat')} icon="file-text" label="Cheat Sheet" />
+                        <NavItem icon={isDarkMode ? 'sun' : 'moon'} onClick={() => setIsDarkMode(!isDarkMode)} label={isDarkMode ? 'Light' : 'Dark'} />
+                        <NavItem icon="refresh-ccw" onClick={() => { if(confirm('Reset all progress?')) { localStorage.clear(); location.reload(); } }} label="Reset" />
+                    </div>
+                </div>
+            </aside>
+        ));
+
+        const TopBar = React.memo(({ searchQuery, setSearchQuery, setCurrentView, currentView }) => (
+            <header className="top-bar">
+                <div className="search-pill">
+                    <Icon name="search" size={18} className="text-[var(--text-muted)]" />
+                    <input type="text" placeholder="Search topics, flashcards..." className="bg-transparent border-none outline-none flex-1 ml-3 text-sm font-medium" value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); if(currentView !== 'library') setCurrentView('library'); }} />
+                    <div className="w-8 h-8 bg-[var(--primary-purple)] rounded-full flex items-center justify-center text-white cursor-pointer ml-2"><Icon name="arrow-right" size={14} /></div>
+                </div>
+                <div className="flex items-center gap-6">
+                    <button className="w-10 h-10 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:bg-slate-50 transition-colors"><Icon name="bell" size={18} /></button>
+                    <div className="flex items-center gap-3"><div className="text-right hidden sm:block"><div className="text-[10px] font-bold text-[var(--text-muted)] uppercase">Howdy</div><div className="text-sm font-bold">Student</div></div><div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center text-indigo-600 font-bold">S</div></div>
+                </div>
+            </header>
+        ));
+
+        const App = () => {
+            const [currentView, setCurrentView] = useState('dashboard');
+            const [selectedTopicId, setSelectedTopicId] = useState(null);
+            const [planner, setPlanner] = useState(studyData.planner);
+            const [weakSpots, setWeakSpots] = useState([]);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [isDarkMode, setIsDarkMode] = useState(false);
+            const [quizScore, setQuizScore] = useState({ total: 0, correct: 0 });
+            
+            // Quiz State Persistence
+            const [quizState, setQuizState] = useState({
+                topicId: null,
+                questions: [],
+                currentQ: 0,
+                selectedOpt: null,
+                score: 0,
+                isFinished: false
+            });
+
+            const startQuiz = (topicId) => {
+                const topic = studyData.topics.find(t => t.id === topicId);
+                const pool = topic ? topic.questions : studyData.topics.flatMap(t => t.questions);
+                const shuffled = pool.sort(() => Math.random() - 0.5).slice(0, 10);
+                setQuizState({
+                    topicId,
+                    questions: shuffled,
+                    currentQ: 0,
+                    selectedOpt: null,
+                    score: 0,
+                    isFinished: false
+                });
+                setCurrentView('quiz');
+            };
+            
+            // Mock Exam State Persistence
+            const initialMockQuestions = useMemo(() => studyData.topics.flatMap(t => t.questions.sort(() => Math.random() - 0.5).slice(0, 3)).sort(() => Math.random() - 0.5), []);
+            const [mockExamState, setMockExamState] = useState({
+                questions: initialMockQuestions,
+                answers: {},
+                time: initialMockQuestions.length * 60,
+                isFinished: false,
+                showReview: false
+            });
+
+            const resetMockExam = () => {
+                const newQuestions = studyData.topics.flatMap(t => t.questions.sort(() => Math.random() - 0.5).slice(0, 3)).sort(() => Math.random() - 0.5);
+                setMockExamState({
+                    questions: newQuestions,
+                    answers: {},
+                    time: newQuestions.length * 60,
+                    isFinished: false,
+                    showReview: false
+                });
+            };
+
+            useEffect(() => {
+                try {
+                    const saved = localStorage.getItem('study_progress');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        setPlanner(parsed.planner || studyData.planner);
+                        setWeakSpots(parsed.weakSpots || []);
+                        setQuizScore(parsed.quizScore || { total: 0, correct: 0 });
+                    }
+                } catch (e) { console.error(e); }
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) setIsDarkMode(true);
+            }, []);
+
+            useEffect(() => {
+                try { localStorage.setItem('study_progress', JSON.stringify({ planner, weakSpots, quizScore })); }
+                catch (e) { console.error(e); }
+            }, [planner, weakSpots, quizScore]);
+
+            useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            }, [currentView, mockExamState.showReview, mockExamState.isFinished]);
+
+            useEffect(() => {
+                if (isDarkMode) document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+                // Re-scan icons after theme change
+                setTimeout(() => { if (window.lucide) window.lucide.createIcons(); }, 0);
+            }, [isDarkMode]);
+
+            const progress = useMemo(() => Math.round((planner.filter(p => p.done).length / planner.length) * 100), [planner]);
+            const accuracy = useMemo(() => quizScore.total === 0 ? 0 : Math.round((quizScore.correct / quizScore.total) * 100), [quizScore]);
+
+            const NavItem = ({ icon, label, active, onClick, badge }) => (
+                <div onClick={onClick} className={`nav-item ${active ? 'active' : ''}`}>
+                    <div className="nav-item-icon"><Icon name={icon} size={18} /></div>
+                    <span className="flex-1">{label}</span>
+                    {badge > 0 && <span className="w-5 h-5 bg-[#F5780F] text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-bounce">{badge}</span>}
+                </div>
+            );
+
+            const StatCard = ({ icon, label, value, color, showProgress }) => (
+                <div className="card">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-${color}-50 text-${color}-500 dark:bg-opacity-10`}><Icon name={icon} /></div>
+                    </div>
+                    <div className="text-3xl font-extrabold mb-1">{value}</div>
+                    <div className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider">{label}</div>
+                    {showProgress !== undefined && (
+                        <div className="mt-4 h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-[var(--primary-purple)]" style={{ width: `${showProgress}%` }}></div>
+                        </div>
+                    )}
+                </div>
+            );
+
+            const Dashboard = () => (
+                <div className="space-y-10 animate-fade-in">
+                    <div>
+                        <h1 className="text-[40px] font-[800] leading-tight">Dashboard</h1>
+                        <p className="text-[var(--text-muted)] text-lg">5 days left until your test. Keep going.</p>
+                    </div>
+                    <div className="stats-grid grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <StatCard icon="calendar" label="Days Left" value="5" color="purple" />
+                        <StatCard icon="trending-up" label="Overall Progress" value={`${progress}%`} color="blue" showProgress={progress} />
+                        <StatCard icon="alert-circle" label="Weak Spots" value={new Set(weakSpots).size} color="orange" />
+                        <StatCard icon="target" label="Quiz Accuracy" value={`${accuracy}%`} color="emerald" />
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2 space-y-6">
+                            <div className="flex items-center justify-between"><h2 className="text-2xl font-bold">Recommended Topics</h2><button onClick={() => setCurrentView('library')} className="text-[var(--active-blue)] font-bold text-sm">View All</button></div>
+                            <div className="card overflow-hidden !p-0">
+                                <table className="topic-table w-full">
+                                    <thead><tr><th>Topic</th><th>Category</th><th>Priority</th><th>Action</th></tr></thead>
+                                    <tbody>
+                                        {studyData.topics.slice(0, 5).map(t => (
+                                            <tr key={t.id}>
+                                                <td>
+                                                    <div className="flex items-center gap-4">
+                                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${t.category === 'Math' ? 'bg-indigo-50 text-indigo-500' : t.category === 'Stats' ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500'} dark:bg-opacity-10`}><Icon name={t.category === 'Math' ? 'function-square' : t.category === 'Stats' ? 'bar-chart' : 'microscope'} /></div>
+                                                        <div><div className="font-bold">{t.title}</div><div className="text-xs text-[var(--text-muted)]">{t.flashcards.length} flashcards</div></div>
+                                                    </div>
+                                                </td>
+                                                <td><span className={`badge ${t.category === 'Math' ? 'badge-purple' : t.category === 'Stats' ? 'badge-orange' : 'badge-blue'}`}>{t.category}</span></td>
+                                                <td><span className="text-sm font-medium">{t.priority === 'high' ? '⭐ High' : 'Medium'}</span></td>
+                                                <td><button onClick={() => { if (quizState.topicId === t.id && !quizState.isFinished) setCurrentView('quiz'); else startQuiz(t.id); }} className="btn-pill btn-primary !py-2 !px-6 text-sm">Study</button></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="space-y-6">
+                            <h2 className="text-2xl font-bold">Today's Plan</h2>
+                            <div className="card space-y-4">
+                                {planner.map((p, i) => (
+                                    <div key={i} className="flex items-center gap-4 group">
+                                        <div onClick={() => { const n = [...planner]; n[i].done = !n[i].done; setPlanner(n); }} className={`custom-checkbox ${p.done ? 'checked' : ''}`}>{p.done && <Icon name="check" size={14} className="text-white" />}</div>
+                                        <span className={`font-medium transition-all ${p.done ? 'line-through text-[var(--text-muted)]' : ''}`}>Day {p.day}: {p.task}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const TopicLibrary = ({ filterWeak }) => {
+                const topics = filterWeak ? studyData.topics.filter(t => weakSpots.includes(t.id)) : studyData.topics;
+                const filtered = topics.filter(t => t.title.toLowerCase().includes(searchQuery.toLowerCase()) || t.category.toLowerCase().includes(searchQuery.toLowerCase()));
+                return (
+                    <div className="space-y-8 animate-fade-in">
+                        <h2 className="text-3xl font-bold">{filterWeak ? 'Weak Spots' : 'Topic Library'}</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filtered.map(t => (
+                                <div key={t.id} className="card group cursor-pointer" onClick={() => { setSelectedTopicId(t.id); setCurrentView('topic-detail'); }}>
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${t.category === 'Math' ? 'bg-indigo-50 text-indigo-500' : t.category === 'Stats' ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500'} dark:bg-opacity-10`}><Icon name={t.category === 'Math' ? 'function-square' : t.category === 'Stats' ? 'bar-chart' : 'microscope'} size={28} /></div>
+                                        <span className={`badge ${t.category === 'Math' ? 'badge-purple' : t.category === 'Stats' ? 'badge-orange' : 'badge-blue'}`}>{t.category}</span>
+                                    </div>
+                                    <h4 className="text-xl font-bold mb-2 group-hover:text-[var(--primary-purple)] transition-colors">{t.title}</h4>
+                                    <p className="text-sm text-[var(--text-muted)] line-clamp-2 mb-6">{t.overview}</p>
+                                    <div className="flex items-center justify-between pt-6 border-t border-[var(--border)]"><div className="text-xs font-bold text-[var(--text-muted)] uppercase">{t.flashcards.length} Cards</div><div className="flex items-center gap-1 text-[var(--primary-purple)] font-bold text-sm">Study <Icon name="arrow-right" size={14} /></div></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            const TopicDetail = () => {
+                const topic = studyData.topics.find(t => t.id === selectedTopicId);
+                return (
+                    <div className="max-w-3xl mx-auto space-y-8 animate-fade-in">
+                        <button onClick={() => setCurrentView('library')} className="flex items-center gap-2 text-[var(--text-muted)] font-bold hover:text-[var(--text-main)] transition-colors"><Icon name="arrow-left" size={18} /> Back to Library</button>
+                        <div className="card !p-10 space-y-10">
+                            <div><span className={`badge ${topic.category === 'Math' ? 'badge-purple' : topic.category === 'Stats' ? 'badge-orange' : topic.category === 'badge-blue'} mb-4`}>{topic.category}</span><h1 className="text-4xl font-extrabold">{topic.title}</h1></div>
+                            <div className="space-y-8">
+                                <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-blue-500"><Icon name="info" /> Overview</h3><p className="text-lg text-[var(--text-muted)] leading-relaxed">{topic.overview}</p></section>
+                                <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-purple-500"><Icon name="list" /> Core Concepts</h3><ul className="grid grid-cols-1 md:grid-cols-2 gap-3">{topic.concepts.map((c, i) => (<li key={i} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-[var(--border)] font-medium">{c}</li>))}</ul></section>
+                                <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-orange-500"><Icon name="zap" /> Memory Aids</h3><div className="p-6 bg-orange-50 dark:bg-orange-900/10 rounded-3xl border border-orange-200 dark:border-orange-900/30 text-orange-800 dark:text-orange-200 italic">"{topic.mnemonics}"</div></section>
+                            </div>
+                            <div className="flex gap-4"><button onClick={() => { if (quizState.topicId === topic.id && !quizState.isFinished) setCurrentView('quiz'); else startQuiz(topic.id); }} className="btn-pill btn-primary flex-1 py-4">Take Quiz</button><button onClick={() => setCurrentView('flashcards')} className="btn-pill btn-black flex-1 py-4">Flashcards</button></div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const QuizMode = ({ state, setState, onComplete }) => {
+                const { questions, currentQ, selectedOpt, score, isFinished, topicId } = state;
+                
+                if (questions.length === 0) return null;
+
+                const q = questions[currentQ];
+
+                if (isFinished) return (
+                    <div className="max-w-md mx-auto text-center space-y-8 animate-fade-in">
+                        <div className="w-32 h-32 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600"><Icon name="check-circle" size={64} /></div>
+                        <h2 className="text-3xl font-bold">Quiz Finished!</h2><div className="text-5xl font-extrabold text-[var(--primary-purple)]">{score}/10</div>
+                        <button onClick={() => { startQuiz(topicId); }} className="btn-pill btn-black w-full py-4">Restart Quiz</button>
+                        <button onClick={() => setCurrentView('dashboard')} className="btn-pill btn-primary w-full py-4">Back to Dashboard</button>
+                    </div>
+                );
+
+                return (
+                    <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
+                        <div className="flex justify-between items-center"><div className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest">Question {currentQ + 1} of 10</div><div className="h-2 w-32 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div className="h-full bg-[var(--primary-purple)] transition-all" style={{ width: `${(currentQ + 1) * 10}%` }}></div></div></div>
+                        <div className="card !p-8 space-y-8">
+                            <h3 className="text-2xl font-bold">{q.q}</h3>
+                            <div className="grid gap-3">{q.a.map((opt, i) => {
+                                let style = "border-[var(--border)] hover:bg-slate-50 dark:hover:bg-slate-800";
+                                if (selectedOpt !== null) { if (i === q.c) style = "bg-emerald-50 border-emerald-500 text-emerald-700"; else if (i === selectedOpt) style = "bg-rose-50 border-rose-500 text-rose-700"; }
+                                return (<button key={i} disabled={selectedOpt !== null} onClick={() => { 
+                                    const isCorrect = i === q.c;
+                                    setState(s => ({
+                                        ...s,
+                                        selectedOpt: i,
+                                        score: isCorrect ? s.score + 1 : s.score
+                                    }));
+                                    if (!isCorrect) {
+                                        setWeakSpots(w => [...new Set([...w, topicId || q.topic])]);
+                                    }
+                                }} className={`p-5 rounded-2xl border-2 text-left font-semibold transition-all ${style}`}>{opt}</button>);
+                            })}</div>
+                            {selectedOpt !== null && <div className="p-6 bg-indigo-50 dark:bg-indigo-900/10 rounded-2xl text-sm leading-relaxed"><span className="font-bold text-[var(--primary-purple)]">Explanation:</span> {q.e}</div>}
+                            {selectedOpt !== null && <button onClick={() => { 
+                                if (currentQ < 9) { 
+                                    setState(s => ({ ...s, currentQ: s.currentQ + 1, selectedOpt: null }));
+                                } else { 
+                                    setState(s => ({ ...s, isFinished: true }));
+                                    onComplete(score + (selectedOpt === q.c ? 1 : 0));
+                                } 
+                            }} className="btn-pill btn-primary w-full py-4">{currentQ === 9 ? 'Finish Quiz' : 'Next Question'}</button>}
+                        </div>
+                    </div>
+                );
+            };
+
+            const FlashcardsView = () => {
+                const cards = (studyData.topics.find(t => t.id === selectedTopicId) || studyData.topics[0]).flashcards;
+                const [idx, setIdx] = useState(0);
+                const [flipped, setFlipped] = useState(false);
+                return (
+                    <div className="max-w-md mx-auto space-y-12 text-center animate-fade-in">
+                        <h2 className="text-3xl font-bold">Flashcards</h2>
+                        <div className="flashcard-container" onClick={() => setFlipped(!flipped)}>
+                            <div className={`flashcard-inner ${flipped ? 'flipped' : ''}`}>
+                                <div className="flashcard-front bg-white dark:bg-slate-800">
+                                    <p className="text-2xl font-bold">{cards[idx].f}</p>
+                                    <div className="absolute bottom-8 text-[var(--text-muted)] text-sm font-bold flex items-center gap-2"><Icon name="mouse-pointer-2" size={14} /> Tap to flip</div>
+                                </div>
+                                <div className="flashcard-back"><p className="text-xl font-medium">{cards[idx].b}</p></div>
+                            </div>
+                        </div>
+                        <div className="flex gap-4"><button onClick={() => { setFlipped(false); setTimeout(() => setIdx(i => (i + 1) % cards.length), 200); }} className="btn-pill btn-black flex-1 py-4">Review Again</button><button onClick={() => { setFlipped(false); setTimeout(() => setIdx(i => (i + 1) % cards.length), 200); }} className="btn-pill btn-primary flex-1 py-4">Got It</button></div>
+                    </div>
+                );
+            };
+
+        const MockTimer = React.memo(({ time }) => (
+            <div className="sticky top-[89px] z-20 flex justify-center">
+                <div className="bg-rose-500 text-white px-6 py-2 rounded-full font-mono text-xl font-bold shadow-lg shadow-rose-500/20">
+                    {Math.floor(time / 60)}:{(time % 60).toString().padStart(2, '0')}
+                </div>
+            </div>
+        ));
+
+        const MockExam = React.memo(({ state, setState, onReset }) => {
+            const { questions, time, answers, isFinished, showReview } = state;
+
+            useEffect(() => { 
+                if (isFinished) return;
+                const timer = setInterval(() => {
+                    setState(s => ({ ...s, time: s.time > 0 ? s.time - 1 : 0 }));
+                }, 1000); 
+                return () => clearInterval(timer); 
+            }, [isFinished, setState]);
+
+            useEffect(() => {
+                if (time === 0 && !isFinished) setState(s => ({ ...s, isFinished: true }));
+            }, [time, isFinished, setState]);
+
+            if (isFinished && !showReview) return (
+                <div className="max-w-2xl mx-auto space-y-10 text-center">
+                    <h2 className="text-4xl font-extrabold mb-4">Exam Results</h2>
+                    <div className="text-7xl font-[900] text-[var(--primary-purple)]">{questions.filter((q, i) => answers[i] === q.c).length}/{questions.length}</div>
+                    <div className="flex flex-col gap-4">
+                        <button onClick={() => setState(s => ({ ...s, showReview: true }))} className="btn-pill btn-primary w-full py-4">Review Answers</button>
+                        <button onClick={onReset} className="btn-pill btn-black w-full py-4">Restart Exam</button>
+                        <button onClick={() => setCurrentView('dashboard')} className="btn-pill border border-[var(--border)] w-full py-4">Return to Dashboard</button>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="max-w-3xl mx-auto space-y-10">
+                    {!isFinished && <MockTimer time={time} />}
+                    {isFinished && showReview && (
+                        <div className="flex justify-between items-center mb-8">
+                            <h2 className="text-3xl font-bold">Review Mode</h2>
+                            <button onClick={() => setState(s => ({ ...s, showReview: false }))} className="btn-pill btn-black py-2 px-6">Back to Results</button>
+                        </div>
+                    )}
+                    <div className="space-y-8">{questions.map((q, i) => (
+                        <div key={i} className={`card !p-8 space-y-6 ${isFinished && showReview ? (answers[i] === q.c ? 'border-emerald-500/50 bg-emerald-50/5' : 'border-rose-500/50 bg-rose-50/5') : ''}`}>
+                            <div className="flex justify-between items-start">
+                                <h4 className="text-xl font-bold">{i + 1}. {q.q}</h4>
+                                {isFinished && showReview && (
+                                    answers[i] === q.c 
+                                        ? <span className="text-emerald-500 flex items-center gap-1 font-bold"><Icon name="check-circle" size={20} /> Correct</span>
+                                        : <span className="text-rose-500 flex items-center gap-1 font-bold"><Icon name="x-circle" size={20} /> Incorrect</span>
+                                )}
+                            </div>
+                            <div className="grid gap-3">{q.a.map((opt, optIdx) => {
+                                let style = "border-[var(--border)]";
+                                if (isFinished && showReview) {
+                                    if (optIdx === q.c) style = "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-200";
+                                    else if (answers[i] === optIdx) style = "border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-200";
+                                } else if (answers[i] === optIdx) {
+                                    style = "border-[var(--primary-purple)] bg-indigo-50 dark:bg-indigo-900/20";
+                                } else {
+                                    style += " hover:bg-slate-50 dark:hover:bg-slate-800";
+                                }
+
+                                return (
+                                    <label key={optIdx} className={`p-4 rounded-2xl border-2 flex items-center gap-3 transition-all ${!isFinished ? 'cursor-pointer' : ''} ${style}`}>
+                                        <input type="radio" checked={answers[i] === optIdx} onChange={() => !isFinished && setState(s => ({ ...s, answers: { ...s.answers, [i]: optIdx } }))} className="hidden" disabled={isFinished} />
+                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${answers[i] === optIdx ? 'border-[var(--primary-purple)]' : 'border-[var(--border)]'}`}>
+                                            {answers[i] === optIdx && <div className="w-2.5 h-2.5 bg-[var(--primary-purple)] rounded-full"></div>}
+                                        </div>
+                                        <span className="font-semibold">{opt}</span>
+                                    </label>
+                                );
+                            })}</div>
+                            {isFinished && showReview && (
+                                <div className={`p-6 rounded-2xl text-sm leading-relaxed ${answers[i] === q.c ? 'bg-emerald-50 dark:bg-emerald-900/10' : 'bg-rose-50 dark:bg-rose-900/10'}`}>
+                                    <span className="font-bold block mb-2">{answers[i] === q.c ? 'Well done!' : 'Explanation:'}</span>
+                                    {q.e}
+                                </div>
+                            )}
+                        </div>
+                    ))}</div>
+                    {!isFinished && <button onClick={() => setState(s => ({ ...s, isFinished: true }))} className="btn-pill btn-primary w-full py-5 text-xl">Submit Exam</button>}
+                </div>
+            );
+        }, (prev, next) => {
+            return prev.state.questions === next.state.questions &&
+                   prev.state.answers === next.state.answers &&
+                   prev.state.isFinished === next.state.isFinished &&
+                   prev.state.showReview === next.state.showReview;
+        });
+
+            return (
+                <div className="app-shell">
+                    <Sidebar 
+                        currentView={currentView} 
+                        setCurrentView={setCurrentView} 
+                        weakSpots={weakSpots} 
+                        isDarkMode={isDarkMode} 
+                        setIsDarkMode={setIsDarkMode} 
+                    />
+                    <main className="main-content">
+                        <TopBar 
+                            searchQuery={searchQuery} 
+                            setSearchQuery={setSearchQuery} 
+                            setCurrentView={setCurrentView} 
+                            currentView={currentView} 
+                        />
+                        <div className="content-area">
+                            {currentView === 'dashboard' && <Dashboard />}
+                            {currentView === 'library' && <TopicLibrary />}
+                            {currentView === 'weak' && <TopicLibrary filterWeak />}
+                            {currentView === 'topic-detail' && <TopicDetail />}
+                            {currentView === 'quiz' && <QuizMode state={quizState} setState={setQuizState} onComplete={(score) => setQuizScore(prev => ({ total: prev.total + 10, correct: prev.correct + score }))} />}
+                            {currentView === 'flashcards' && <FlashcardsView />}
+                            {currentView === 'mock' && <MockExam state={mockExamState} setState={setMockExamState} onReset={resetMockExam} />}
+                            {currentView === 'cheat' && <TopicLibrary />}
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
