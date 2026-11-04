@@ -31,3 +31,21 @@ Implemented `Science.md` inside the StudySystem app so science notes are searcha
    - Reference notes now render numbered bullet lists from the embedded `Science.md` content.
 4. **Library Search Upgrade**:
    - Search now matches against overviews, concepts, examples, mnemonics, and embedded note text instead of only title/category.
+
+### 2026-11-04: Math.md Creation & Integration
+
+### Feature Overview
+Created `Math.md` and integrated Statistics and Probability content into the StudySystem application, including interactive sample problems.
+
+### Implementation Details
+1. **Comprehensive Math Content**:
+   - Created `Math.md` with 18 topics covering Statistics and Probability (Mean/Median/Mode, ANOVA, P-values, Z-scores, etc.).
+   - Each topic contains exactly 10 technical key points and a sample problem with solution.
+2. **In-App Data Mapping**:
+   - Added a `mathReference` object in `index.html` to hold the content.
+   - Expanded the `Stats` category in the app with three new major topics: `Advanced Stats`, `Probability & Distributions`, and `Data Visualization`.
+3. **Interactive UI (Sample Problems)**:
+   - Updated the `TopicDetail` component to render "Sample Problem" cards within reference notes.
+   - Problems are styled with an indigo theme to distinguish them from study points.
+4. **Unified Search & Review**:
+   - All new math content is integrated into the Library search engine, Quizzes, and Flashcards.

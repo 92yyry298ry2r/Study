@@ -537,6 +537,315 @@
             }
         };
 
+        const mathReference = {
+            meanMedianMode: {
+                title: 'Mean, Median, and Mode',
+                points: [
+                    'Mean is the arithmetic average calculated by summing all values and dividing by the count (n).',
+                    'Median is the middle value in a sorted data set; if n is even, it is the average of the two middle values.',
+                    'Mode is the value that occurs most frequently in a data set; a set can be bimodal or multimodal.',
+                    'Mean is sensitive to outliers, while Median is robust (less affected by extreme values).',
+                    'In a perfectly symmetrical distribution, Mean = Median = Mode.',
+                    'Right-skewed distribution: Mean > Median > Mode.',
+                    'Left-skewed distribution: Mean < Median < Mode.',
+                    'The sum of deviations from the Mean is always zero.',
+                    'Weighted Mean accounts for the relative importance (weights) of different values.',
+                    'Harmonic and Geometric means are used for specific rates and growth ratios.'
+                ],
+                problem: 'Find Mean, Median, and Mode of {5, 8, 8, 12, 17}.',
+                solution: 'Mean: (5+8+8+12+17)/5 = 10. Median: 8. Mode: 8.'
+            },
+            permutationCombinatorics: {
+                title: 'Permutations and Combinatorics',
+                points: [
+                    'Permutations are used when the order of selection matters (e.g., arrangements).',
+                    'Combinations are used when the order does not matter (e.g., groups/sets).',
+                    'Formula for Permutation: P(n, r) = n! / (n - r)!.',
+                    'Formula for Combination: C(n, r) = n! / [r!(n - r)!].',
+                    'Factorial (n!) is the product of all positive integers up to n.',
+                    'Circular Permutation: (n - 1)! for arranging n items in a circle.',
+                    'Distinguishable Permutations: n! / (n1! * n2! ...) for items with repetitions.',
+                    'Fundamental Counting Principle: Multiply possibilities for independent events.',
+                    'Combinations always result in smaller or equal values compared to permutations for the same n and r.',
+                    'C(n, r) = C(n, n - r) due to symmetry in the binomial coefficient.'
+                ],
+                problem: 'How many ways to choose a committee of 3 from 10 people?',
+                solution: 'Use C(10, 3) = (10*9*8)/(3*2*1) = 120.'
+            },
+            probabilityFoundations: {
+                title: 'Probability Foundations',
+                points: [
+                    'Probability is the measure of likelihood, ranging from 0 (impossible) to 1 (certain).',
+                    'Theoretical Probability = (Number of Favorable Outcomes) / (Total Outcomes).',
+                    'Complement Rule: P(not A) = 1 - P(A).',
+                    'Independent Events: P(A and B) = P(A) * P(B).',
+                    'Dependent Events: P(A and B) = P(A) * P(B|A).',
+                    'Addition Rule for Mutually Exclusive Events: P(A or B) = P(A) + P(B).',
+                    'General Addition Rule: P(A or B) = P(A) + P(B) - P(A and B).',
+                    'Conditional Probability: P(A|B) = P(A and B) / P(B).',
+                    'Law of Large Numbers: Experimental probability approaches theoretical probability as trials increase.',
+                    'Sample Space is the set of all possible outcomes of an experiment.'
+                ],
+                problem: 'Probability of drawing an Ace or a King from a 52-card deck?',
+                solution: 'P(Ace) + P(King) = 4/52 + 4/52 = 8/52 = 2/13.'
+            },
+            zScores: {
+                title: 'Z-scores and Standardization',
+                points: [
+                    'Z-score represents the number of standard deviations a value is from the Mean.',
+                    'Formula: z = (x - μ) / σ (where μ is Mean and σ is Standard Deviation).',
+                    'A positive Z-score means the value is above the Mean; negative means below.',
+                    'Z-scores allow comparison of data from different distributions.',
+                    'Standard Normal Distribution has a Mean of 0 and Standard Deviation of 1.',
+                    'Empirical Rule: ~68% of data falls within |z| < 1.',
+                    'Empirical Rule: ~95% of data falls within |z| < 2.',
+                    'Empirical Rule: ~99.7% of data falls within |z| < 3.',
+                    'A Z-score of 0 indicates the value is exactly at the Mean.',
+                    'Percentiles can be found by looking up Z-scores in a standard normal table.'
+                ],
+                problem: 'x = 85, μ = 70, σ = 10. Find Z-score.',
+                solution: 'z = (85 - 70) / 10 = 1.5.'
+            },
+            pValue: {
+                title: 'P-value and Significance',
+                points: [
+                    'P-value is the probability of obtaining results at least as extreme as observed, assuming H0 is true.',
+                    'Small P-value (typically < 0.05) suggests evidence against the Null Hypothesis.',
+                    'Significance Level (α) is the threshold for rejecting H0 (commonly 0.05 or 0.01).',
+                    'If P-value ≤ α, the result is "statistically significant" and H0 is rejected.',
+                    'If P-value > α, we "fail to reject" H0 (insufficient evidence).',
+                    'P-value does not measure the magnitude of the effect or the probability that H0 is true.',
+                    'Smaller α reduces Type I error but increases the risk of Type II error.',
+                    'Two-tailed tests split α into both tails (α/2 each).',
+                    'One-tailed tests look for an effect in a specific direction.',
+                    'Reporting P-values provides more detail than just stating "significant" or "not significant."'
+                ],
+                problem: 'If α = 0.05 and p = 0.03, what is the conclusion?',
+                solution: 'Reject H0; result is statistically significant.'
+            },
+            hypotheses: {
+                title: 'Null and Alternative Hypotheses',
+                points: [
+                    'Null Hypothesis (H0) assumes no effect, no difference, or status quo.',
+                    'Alternative Hypothesis (Ha or H1) represents the claim or research hypothesis.',
+                    'H0 always contains the equality sign (=, ≤, or ≥).',
+                    'Ha never contains the equality sign (≠, <, or >).',
+                    'Hypothesis testing is a process of using sample data to evaluate the credibility of H0.',
+                    'A "rejection region" is the set of values for which we reject H0.',
+                    'Non-directional (Two-tailed): Ha: μ ≠ value.',
+                    'Directional (One-tailed): Ha: μ > value or Ha: μ < value.',
+                    'We never "accept" H0; we only "fail to reject" it.',
+                    'Test Statistic (z, t, F, or χ²) is calculated from sample data to find the P-value.'
+                ],
+                problem: 'Claim: Average height is greater than 160cm. State H0 and Ha.',
+                solution: 'H0: μ ≤ 160. Ha: μ > 160.'
+            },
+            frequencyDist: {
+                title: 'Frequency Distributions',
+                points: [
+                    'Organizes raw data into classes or intervals showing the number of occurrences.',
+                    'Frequency (f) is the number of times a value or class appears.',
+                    'Relative Frequency is the proportion of total observations in a class (f / n).',
+                    'Cumulative Frequency is the running total of frequencies.',
+                    'Midpoint of a class: (Lower Limit + Upper Limit) / 2.',
+                    'Class Width: The difference between consecutive lower class limits.',
+                    'Grouped Frequency Distribution is used for large ranges of continuous data.',
+                    'Ungrouped Frequency Distribution is used for discrete data with few values.',
+                    'Frequency Histograms visually represent grouped frequency distributions.',
+                    'Sum of relative frequencies must always equal 1 (or 100%).'
+                ],
+                problem: 'Data: {1, 2, 2, 3, 3, 3}. Find frequency of 3.',
+                solution: 'Frequency = 3. Relative Frequency = 3/6 = 0.5.'
+            },
+            boxplotStemLeaf: {
+                title: 'Boxplot and Stem-and-Leaf Plots',
+                points: [
+                    'Boxplot (Box-and-Whisker) summarizes data using a 5-number summary.',
+                    '5-number summary: Min, Q1 (25th), Median (50th), Q3 (75th), Max.',
+                    'Interquartile Range (IQR) = Q3 - Q1.',
+                    'Whiskers usually extend to 1.5 * IQR from the quartiles; points beyond are outliers.',
+                    'Stem-and-Leaf plot displays actual data values while showing distribution shape.',
+                    'Stem: Leading digit(s); Leaf: Final digit.',
+                    'Boxplots are excellent for comparing distributions between multiple groups.',
+                    'Stem-and-Leaf plots are best for small to medium datasets.',
+                    'The "Box" in a boxplot contains the middle 50% of the data.',
+                    'A vertical line inside the box marks the Median.'
+                ],
+                problem: 'Q1=10, Q3=20. Find IQR and outlier boundary.',
+                solution: 'IQR = 10. Upper boundary = 20 + 1.5(10) = 35.'
+            },
+            alphaBetaErrors: {
+                title: 'Alpha and Beta Errors (Type I & II)',
+                points: [
+                    'Type I Error (Alpha, α): Rejecting a true Null Hypothesis ("False Positive").',
+                    'Type II Error (Beta, β): Failing to reject a false Null Hypothesis ("False Negative").',
+                    'Power of a Test (1 - β): Probability of correctly rejecting a false H0.',
+                    'Increasing Sample Size (n) decreases both α and β (increases Power).',
+                    'As α decreases, β increases (trade-off).',
+                    'Level of Significance (α) is chosen before the experiment.',
+                    'Consequences of Type I error often involve wasted resources or unnecessary action.',
+                    'Consequences of Type II error involve missing a real effect or discovery.',
+                    'Effect Size: Larger differences between populations are easier to detect (higher Power).',
+                    'Non-significant results (high P-value) may be due to high β (low Power).'
+                ],
+                problem: 'Innocent person found guilty. Which error?',
+                solution: 'Type I Error (True H0 rejected).'
+            },
+            correlationRegression: {
+                title: 'Correlation and Regression',
+                points: [
+                    'Correlation (r) measures the strength and direction of a linear relationship.',
+                    'r ranges from -1 (perfect negative) to +1 (perfect positive).',
+                    'r = 0 indicates no linear correlation.',
+                    'Correlation does not imply causation.',
+                    'Coefficient of Determination (r²) represents the proportion of variance explained by the model.',
+                    'Simple Linear Regression predicts Y based on X using the equation Y = a + bX.',
+                    'Residual: The difference between observed and predicted values (y - ŷ).',
+                    'Least Squares Method minimizes the sum of squared residuals.',
+                    'Influential points (outliers) can significantly alter the regression line.',
+                    'Homoscedasticity: Constant variance of residuals across all levels of X.'
+                ],
+                problem: 'If r = 0.8, what is r²?',
+                solution: 'r² = 0.64 (64% of variance explained).'
+            },
+            anova: {
+                title: 'One-way ANOVA Interpretation',
+                points: [
+                    'ANOVA (Analysis of Variance) compares means of 3 or more independent groups.',
+                    'H0: All group means are equal (μ1 = μ2 = μ3...).',
+                    'Ha: At least one group mean is different.',
+                    'F-statistic = (Variance between groups) / (Variance within groups).',
+                    'Large F-ratio indicates group differences are likely not due to chance.',
+                    'Degrees of Freedom (between): k - 1 (where k is number of groups).',
+                    'Degrees of Freedom (within): N - k (where N is total sample size).',
+                    'Assumptions: Normality, Independence, and Homogeneity of Variance.',
+                    'Post-hoc tests (e.g., Tukey) are performed only if ANOVA is significant to find which groups differ.',
+                    'Total Variation = Between-Group Variation + Within-Group Variation.'
+                ],
+                problem: 'ANOVA p = 0.01. Can we say group 1 is higher than group 2?',
+                solution: 'No, only that at least one difference exists. Post-hoc needed.'
+            },
+            graphInterpretation: {
+                title: 'Graph Interpretations',
+                points: [
+                    'X-axis usually represents the independent variable; Y-axis the dependent variable.',
+                    'Trend: General direction in which data is moving (Increasing, Decreasing, Stable).',
+                    'Intercept: Where the graph crosses an axis (e.g., y-intercept at x=0).',
+                    'Slope: Rate of change (Rise / Run).',
+                    'Inflection Point: Where the curve changes concavity.',
+                    'Asymptote: A line that a graph approaches but never touches.',
+                    'Extrapolation: Estimating values outside the known data range (risky).',
+                    'Interpolation: Estimating values between known data points.',
+                    'Correlation on Scatterplot: Closeness of points to a straight line.',
+                    'Scale Manipulation: Changing axis increments can make trends look more/less dramatic.'
+                ],
+                problem: 'A distance-time graph is a horizontal line. Describe motion.',
+                solution: 'Velocity is zero; object is stationary.'
+            },
+            graphTypes: {
+                title: 'Types of Statistical Graphs',
+                points: [
+                    'Bar Graph: Used for categorical data; bars do not touch.',
+                    'Histogram: Used for continuous numerical data; bars touch.',
+                    'Pie Chart: Shows proportions of a whole (best for few categories).',
+                    'Line Graph: Best for showing trends over time (Time Series).',
+                    'Scatterplot: Shows relationship between two numerical variables.',
+                    'Pareto Chart: Bar graph sorted from highest to lowest frequency.',
+                    'Frequency Polygon: Line graph connecting midpoints of histogram bars.',
+                    'Ogive: Graph of cumulative frequency.',
+                    'Dot Plot: Shows frequency of small datasets along a number line.',
+                    'Boxplot: Displays distribution and outliers via quartiles.'
+                ],
+                problem: 'Which graph best shows a student\'s grade improvement over 5 months?',
+                solution: 'Line Graph.'
+            },
+            percentilesQuartiles: {
+                title: 'Percentiles and Quartiles',
+                points: [
+                    'Percentile (Pk) is a value below which k percent of the data falls.',
+                    'Median is the 50th percentile (P50).',
+                    'Q1 is the 25th percentile; Q3 is the 75th percentile.',
+                    'Percentile Rank: The percentage of scores equal to or lower than a given score.',
+                    'Deciles divide data into 10 equal parts (D1, D2... D9).',
+                    'Quartiles divide data into 4 equal parts.',
+                    'Standardized tests often use percentiles to compare student performance.',
+                    'High percentile rank means a score is high relative to the group.',
+                    'Formula for position: L = (k/100) * n.',
+                    'Unlike raw scores, percentiles provide relative standing.'
+                ],
+                problem: 'If you are in the 90th percentile of a class of 100, how many students scored lower or equal to you?',
+                solution: '90 students.'
+            },
+            marginError: {
+                title: 'Margin of Error, Standard Error, and Limits',
+                points: [
+                    'Standard Error (SE) measures the precision of the sample mean (σ / √n).',
+                    'Margin of Error (ME) defines the range around a sample statistic in a confidence interval.',
+                    'ME = Critical Value (z* or t*) * Standard Error.',
+                    'Confidence Interval (CI) = Point Estimate ± Margin of Error.',
+                    'Lower Limit = Estimate - ME; Upper Limit = Estimate + ME.',
+                    'Higher Confidence Level (e.g., 99% vs 95%) increases the ME and widens the CI.',
+                    'Larger Sample Size (n) decreases the SE and ME, narrowing the CI.',
+                    'Standard Error decreases as population variability (σ) decreases.',
+                    'Interpretation: "We are 95% confident that the true population mean falls within the CI."',
+                    'Confidence interval does not mean 95% of individual data points fall in the range.'
+                ],
+                problem: 'Mean = 50, ME = 5. Find the 95% Confidence Interval.',
+                solution: '45 to 55.'
+            },
+            normalCurve: {
+                title: 'Normal and Standard Normal Curves',
+                points: [
+                    'Normal Curve is bell-shaped, symmetrical, and unimodal.',
+                    'The total area under the curve is exactly 1.',
+                    'Mean, Median, and Mode are located at the center.',
+                    'The tails are asymptotic (never touch the x-axis).',
+                    'Standard Normal Curve (Z-distribution) has μ = 0 and σ = 1.',
+                    'Skewness measures asymmetry (0 for normal).',
+                    'Kurtosis measures "peakedness" or tail thickness.',
+                    'Empirical Rule (68-95-99.7) applies only to normal distributions.',
+                    'Probability of a specific point (e.g., P(x=5)) in a continuous normal curve is 0.',
+                    'Areas under the curve represent probabilities or proportions of the population.'
+                ],
+                problem: 'What percentage of a normal distribution is above the mean?',
+                solution: '50%.'
+            },
+            compoundProbability: {
+                title: 'Compound Probability (Coin and Dice)',
+                points: [
+                    'Independent Events: Outcome of coin flip does not affect dice roll.',
+                    'Sample Space for Coin: {H, T}. Total = 2.',
+                    'Sample Space for 6-sided Die: {1, 2, 3, 4, 5, 6}. Total = 6.',
+                    'Total Outcomes for Coin + Die = 2 * 6 = 12.',
+                    'P(Heads and 6) = P(H) * P(6) = 1/2 * 1/6 = 1/12.',
+                    'P(Heads or 6) = P(H) + P(6) - P(H and 6) = 6/12 + 2/12 - 1/12 = 7/12.',
+                    'For a 4-sided die, total outcomes = 2 * 4 = 8.',
+                    'Tree Diagrams help visualize all possible paths for compound events.',
+                    'Sampling with replacement: Events remain independent.',
+                    'Sampling without replacement: Events become dependent.'
+                ],
+                problem: 'Probability of flipping Tails and rolling an even number on a 6-sided die?',
+                solution: '1/2 * 3/6 = 3/12 = 1/4.'
+            },
+            parameterStatistic: {
+                title: 'Parameters vs. Statistics',
+                points: [
+                    'Parameter is a numerical summary of a Population (e.g., Population Mean μ).',
+                    'Statistic is a numerical summary of a Sample (e.g., Sample Mean x̄).',
+                    'We use statistics to estimate unknown parameters.',
+                    'Sampling Error is the natural difference between a statistic and its parameter.',
+                    'Notation: Population Std Dev is σ; Sample Std Dev is s.',
+                    'Notation: Population Proportion is P or π; Sample Proportion is p̂.',
+                    'Parameters are usually fixed but unknown values.',
+                    'Statistics vary from sample to sample (sampling distribution).',
+                    'Census measures every member of a population to find parameters.',
+                    'Inferential Statistics involves making claims about parameters based on statistics.'
+                ],
+                problem: 'A researcher finds 25% of 100 polled students smoke. Is 25% a parameter or statistic?',
+                solution: 'Statistic (based on a sample).'
+            }
+        };
+
         const studyData = {
             topics: [
                 {
@@ -641,6 +950,7 @@
                     concepts: ['Mean: Average', 'Median: Middle', 'Mode: Most frequent', 'Outliers effect'],
                     examples: ['Median of 1, 2, 10 is 2', 'Mode of 2, 2, 3 is 2'],
                     mnemonics: 'Mean is average, Median is middle, Mode is most.',
+                    notes: [mathReference.meanMedianMode],
                     questions: [
                         { q: 'Best measure for income with outliers?', a: ['Mean', 'Median', 'Mode', 'Range'], c: 1, e: 'Median is robust to extremes.' },
                         { q: 'Mean of 2, 4, 6, 8?', a: ['4', '5', '6', '20'], c: 1, e: '20/4 = 5.' },
@@ -665,6 +975,7 @@
                     concepts: ['Null (H0) vs Alt (Ha)', 'P-value < alpha: Reject', 'Type I (alpha) error', 'Type II (beta) error'],
                     examples: ['p=0.01, alpha=0.05 => Reject', 'Type I: Rejecting true H0'],
                     mnemonics: 'If the P is low, the Null must go!',
+                    notes: [mathReference.hypotheses, mathReference.pValue, mathReference.alphaBetaErrors],
                     questions: [
                         { q: 'Null hypothesis (H0) usually assumes?', a: ['A big change', 'No effect/Difference', 'The scientist is right', 'p < 0.05'], c: 1, e: 'Status quo.' },
                         { q: 'Type I error is?', a: ['Rejecting false H0', 'Rejecting true H0', 'Accepting true H0', 'Accepting false H0'], c: 1, e: 'False Positive.' },
@@ -681,6 +992,81 @@
                         { f: 'Type I Error name?', b: 'Alpha (False Positive)' },
                         { f: 'Type II Error name?', b: 'Beta (False Negative)' },
                         { f: 'p-value < alpha means?', b: 'Reject Null Hypothesis' }
+                    ]
+                },
+                {
+                    id: 'advanced_stats', title: 'Advanced Stats', category: 'Stats', priority: 'medium',
+                    overview: 'Correlation, Regression, ANOVA, and Z-scores.',
+                    concepts: ['r measures linear strength', 'ANOVA compares 3+ groups', 'Z-score: (x-mu)/sigma', 'r^2 is explained variance'],
+                    examples: ['r = 0.9 is strong positive', 'Z = 2 is 2 std devs above mean'],
+                    mnemonics: 'Z is zero-centered. ANOVA is all-means-equal.',
+                    notes: [mathReference.zScores, mathReference.correlationRegression, mathReference.anova],
+                    questions: [
+                        { q: 'r = -0.85 indicates?', a: ['Weak negative', 'Strong negative', 'Strong positive', 'No correlation'], c: 1, e: 'r close to -1 is strong negative.' },
+                        { q: 'Z-score for a value equal to the mean?', a: ['-1', '0', '1', 'None'], c: 1, e: 'x - mu = 0.' },
+                        { q: 'What does ANOVA stand for?', a: ['Analysis of Variables', 'Analysis of Variance', 'Average of Values', 'All-Normal Variable Analysis'], c: 1, e: 'Analysis of Variance.' },
+                        { q: 'r^2 = 0.49 means r is?', a: ['0.07', '0.7', '0.49', '0.24'], c: 1, e: 'Square root of 0.49.' },
+                        { q: 'ANOVA H0 assumes all means are?', a: ['Different', 'Equal', 'Zero', 'Positive'], c: 1, e: 'Null assumes equality.' },
+                        { q: 'Positive Z-score means?', a: ['Above mean', 'Below mean', 'At mean', 'Significant'], c: 0, e: 'x > mu.' },
+                        { q: 'If ANOVA p = 0.01, we?', a: ['Reject H0', 'Fail to reject H0', 'Accept H0', 'Need z-test'], c: 0, e: 'p < 0.05.' },
+                        { q: 'Correlation does not imply?', a: ['Relationship', 'Causation', 'Slope', 'Intercept'], c: 1, e: 'Classic stats rule.' },
+                        { q: 'r ranges from?', a: ['0 to 1', '-1 to 1', '-100 to 100', '0 to infinity'], c: 1, e: 'Standard correlation range.' },
+                        { q: 'F-statistic is for?', a: ['Z-test', 'T-test', 'ANOVA', 'Chi-square'], c: 2, e: 'ANOVA uses F-dist.' }
+                    ],
+                    flashcards: [
+                        { f: 'ANOVA test statistic?', b: 'F' },
+                        { f: 'r value for no correlation?', b: '0' },
+                        { f: 'Z-score formula?', b: '(x - mu) / sigma' }
+                    ]
+                },
+                {
+                    id: 'probability_stats', title: 'Probability & Distributions', category: 'Stats', priority: 'medium',
+                    overview: 'Counting rules, normal curves, and error analysis.',
+                    concepts: ['Permutations: Order matters', 'Combinations: Order does not', 'Normal curve: 68-95-99.7', 'Margin of Error'],
+                    examples: ['C(5,2) = 10', 'P(Heads) = 0.5'],
+                    mnemonics: 'Permutation is position. Combination is choice.',
+                    notes: [mathReference.permutationCombinatorics, mathReference.probabilityFoundations, mathReference.normalCurve, mathReference.compoundProbability, mathReference.marginError],
+                    questions: [
+                        { q: 'Order matters in?', a: ['Combinations', 'Permutations', 'Means', 'Variances'], c: 1, e: 'Permutations are arrangements.' },
+                        { q: 'Area under normal curve is?', a: ['0', '0.5', '1', '100'], c: 2, e: 'Represents total probability.' },
+                        { q: 'P(A and B) for independent events?', a: ['P(A)+P(B)', 'P(A)*P(B)', 'P(A)-P(B)', 'P(A)/P(B)'], c: 1, e: 'Multiplication rule.' },
+                        { q: 'Empirical rule: % within 2 std devs?', a: ['68%', '95%', '99.7%', '50%'], c: 1, e: 'Stats standard.' },
+                        { q: 'Probability of rolling a 7 on a 6-sided die?', a: ['1/6', '1/7', '0', '1'], c: 2, e: 'Impossible outcome.' },
+                        { q: 'Formula for C(n,r)?', a: 'n!/(n-r)!', b: 'n!/r!(n-r)!', c: 'r!/n!', d: 'n^r', c: 1, e: 'Includes r! to remove order.' },
+                        { q: 'Standard Normal Curve mu and sigma?', a: ['0 and 1', '1 and 0', '100 and 15', '50 and 10'], c: 0, e: 'Standardized values.' },
+                        { q: 'Margin of Error decreases if?', a: ['n decreases', 'n increases', 'sigma increases', 'alpha increases'], c: 1, e: 'More data = more precision.' },
+                        { q: 'P(Heads and Tails) in one flip?', a: ['0.25', '0.5', '0', '1'], c: 2, e: 'Mutually exclusive.' },
+                        { q: 'Normal curve is also called?', a: ['Bell curve', 'S-curve', 'Box plot', 'Scatter plot'], c: 0, e: 'Visual shape.' }
+                    ],
+                    flashcards: [
+                        { f: '68% range in Z?', b: '+/- 1' },
+                        { f: 'P(Certain Event)?', b: '1' },
+                        { f: 'Order matters?', b: 'Permutation' }
+                    ]
+                },
+                {
+                    id: 'data_viz', title: 'Data Visualization', category: 'Stats', priority: 'low',
+                    overview: 'Interpreting graphs, frequency tables, and summary plots.',
+                    concepts: ['Histogram: Continuous', 'Bar: Categorical', 'Boxplot: 5-number summary', 'Stem-leaf: Original data'],
+                    examples: ['Pie chart for % of budget', 'Line graph for stock price'],
+                    mnemonics: 'Histogram has history (connected). Bar has barriers (separate).',
+                    notes: [mathReference.frequencyDist, mathReference.boxplotStemLeaf, mathReference.graphInterpretation, mathReference.graphTypes, mathReference.percentilesQuartiles, mathReference.parameterStatistic],
+                    questions: [
+                        { q: 'Graph for 5-number summary?', a: ['Histogram', 'Boxplot', 'Pie Chart', 'Scatterplot'], c: 1, e: 'Box-and-whisker plot.' },
+                        { q: 'Which graph shows original values?', a: ['Boxplot', 'Histogram', 'Stem-and-Leaf', 'Pie Chart'], c: 2, e: 'Leaves are digits.' },
+                        { q: 'X-axis usually has the?', a: ['Dependent variable', 'Independent variable', 'Parameter', 'Error'], c: 1, e: 'Standard graphing convention.' },
+                        { q: 'IQR is?', a: 'Q3 - Q1', b: 'Q4 - Q0', c: 'Max - Min', d: 'Mean - Median', c: 0, e: 'Interquartile range.' },
+                        { q: 'Frequency distribution total sum of rel freq?', a: ['0', '1', '100', 'n'], c: 1, e: 'Proportions sum to 1.' },
+                        { q: 'A parameter refers to a?', a: ['Sample', 'Population', 'Individual', 'Statistic'], c: 1, e: 'P for Population, S for Sample.' },
+                        { q: '90th percentile means?', a: ['You failed', '90% scored lower/equal', '10% scored lower', 'Score is 90'], c: 1, e: 'Relative standing.' },
+                        { q: 'Slope on distance-time graph is?', a: ['Distance', 'Time', 'Velocity', 'Acceleration'], c: 2, e: 'Rise (dist) / Run (time).' },
+                        { q: 'Bars touch in a?', a: ['Bar graph', 'Histogram', 'Pie chart', 'Boxplot'], c: 1, e: 'For continuous data.' },
+                        { q: 'Outliers in a boxplot are?', a: ['In the box', 'Outside whiskers', 'At the median', 'Invisible'], c: 1, e: 'Usually marked with dots.' }
+                    ],
+                    flashcards: [
+                        { f: 'P in P-S mnemonic?', b: 'Population (Parameter)' },
+                        { f: 'Boxplot center line?', b: 'Median' },
+                        { f: 'Histogram bars?', b: 'Touch (Continuous)' }
                     ]
                 },
                 {
@@ -1111,7 +1497,7 @@
                                 <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-purple-500"><Icon name="list" /> Core Concepts</h3><ul className="grid grid-cols-1 md:grid-cols-2 gap-3">{topic.concepts.map((c, i) => (<li key={i} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-[var(--border)] font-medium">{c}</li>))}</ul></section>
                                 {topic.examples?.length > 0 && <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-emerald-500"><Icon name="sparkles" /> Quick Examples</h3><ul className="space-y-3">{topic.examples.map((example, i) => (<li key={i} className="p-4 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl border border-emerald-200 dark:border-emerald-900/30 text-emerald-800 dark:text-emerald-200 font-medium">{example}</li>))}</ul></section>}
                                 <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-orange-500"><Icon name="zap" /> Memory Aids</h3><div className="p-6 bg-orange-50 dark:bg-orange-900/10 rounded-3xl border border-orange-200 dark:border-orange-900/30 text-orange-800 dark:text-orange-200 italic">"{topic.mnemonics}"</div></section>
-                                {topic.notes?.length > 0 && <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-sky-500"><Icon name="book-marked" /> Reference Notes</h3><div className="space-y-4">{topic.notes.map((note, noteIndex) => (<div key={noteIndex} className="p-6 bg-slate-50 dark:bg-slate-800 rounded-3xl border border-[var(--border)]"><div className="font-bold text-lg mb-4">{note.title}</div><ul className="space-y-3">{note.points.map((point, pointIndex) => (<li key={pointIndex} className="flex items-start gap-3 text-sm text-[var(--text-muted)] leading-relaxed"><span className="w-6 h-6 rounded-full bg-[var(--primary-purple)] text-white flex items-center justify-center text-xs font-bold shrink-0">{pointIndex + 1}</span><span>{point}</span></li>))}</ul></div>))}</div></section>}
+                                {topic.notes?.length > 0 && <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-sky-500"><Icon name="book-marked" /> Reference Notes</h3><div className="space-y-4">{topic.notes.map((note, noteIndex) => (<div key={noteIndex} className="p-6 bg-slate-50 dark:bg-slate-800 rounded-3xl border border-[var(--border)]"><div className="font-bold text-lg mb-4">{note.title}</div><ul className="space-y-3">{note.points.map((point, pointIndex) => (<li key={pointIndex} className="flex items-start gap-3 text-sm text-[var(--text-muted)] leading-relaxed"><span className="w-6 h-6 rounded-full bg-[var(--primary-purple)] text-white flex items-center justify-center text-xs font-bold shrink-0">{pointIndex + 1}</span><span>{point}</span></li>))}</ul>{note.problem && <div className="mt-6 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-900/30"><div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-2">Sample Problem</div><div className="text-sm font-semibold mb-2">{note.problem}</div>{note.solution && <div className="text-sm text-[var(--text-muted)] italic"><span className="font-bold text-indigo-500">Solution:</span> {note.solution}</div>}</div>}</div>))}</div></section>}
                             </div>
                             <div className="flex gap-4"><button onClick={() => { if (quizState.topicId === topic.id && !quizState.isFinished) setCurrentView('quiz'); else startQuiz(topic.id); }} className="btn-pill btn-primary flex-1 py-4">Take Quiz</button><button onClick={() => setCurrentView('flashcards')} className="btn-pill btn-black flex-1 py-4">Flashcards</button></div>
                         </div>
