@@ -876,7 +876,6 @@
                         </div>
                         <div>
                             <div className="section-label text-[10px] font-bold text-[var(--text-muted)] tracking-[0.2em] mb-4 px-4 uppercase">OTHERS</div>
-                            <NavItem active={currentView === 'cheat'} onClick={() => { setCurrentView('cheat'); setIsOpen(false); }} icon="file-text" label="Cheat Sheet" />
                             <NavItem icon={isDarkMode ? 'sun' : 'moon'} onClick={() => setIsDarkMode(!isDarkMode)} label={isDarkMode ? 'Light' : 'Dark'} />
                             <NavItem icon="refresh-ccw" onClick={() => { if(confirm('Reset all progress?')) { localStorage.clear(); location.reload(); } }} label="Reset" />
                         </div>
@@ -1321,7 +1320,6 @@
                             {currentView === 'quiz' && <QuizMode state={quizState} setState={setQuizState} onComplete={(score) => setQuizScore(prev => ({ total: prev.total + 10, correct: prev.correct + score }))} />}
                             {currentView === 'flashcards' && <FlashcardsView />}
                             {currentView === 'mock' && <MockExam state={mockExamState} setState={setMockExamState} onReset={resetMockExam} />}
-                            {currentView === 'cheat' && <TopicLibrary />}
                         </div>
                     </main>
                 </div>
