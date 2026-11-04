@@ -559,27 +559,51 @@
                     ]
                 },
                 {
-                    id: 'planets', title: 'Planets & Earth', category: 'Science', priority: 'high',
-                    overview: 'Solar system facts and geology.',
-                    concepts: ['Densest: Earth', 'Most eccentric: Mercury', 'Mohs Scale', 'Plate boundaries'],
-                    examples: ['Hardest mineral: Diamond (10)', 'Boundary: Divergent (apart)'],
-                    mnemonics: 'Divergent = Divide.',
+                    id: 'chem_basics', title: 'Chemistry Fundamentals', category: 'Science', priority: 'high',
+                    overview: 'Stoichiometry, Isotopes, and Changes.',
+                    concepts: ['Stoichiometry: Mole ratios', 'Isotopes: Different neutrons', 'Physical vs Chemical Change', 'Thermochemistry: Heat'],
+                    examples: ['C-14: Radiocarbon dating', 'Melting ice: Physical change'],
+                    mnemonics: 'Exo = Exit (Heat leaves).',
                     questions: [
-                        { q: 'Densest planet?', a: ['Mercury', 'Earth', 'Jupiter', 'Saturn'], c: 1, e: 'Earth is most dense.' },
-                        { q: 'Planet with most eccentric orbit?', a: ['Earth', 'Mars', 'Mercury', 'Neptune'], c: 2, e: 'Mercury has most oval orbit.' },
-                        { q: 'Mohs scale measures?', a: ['Density', 'Hardness', 'Temperature', 'Gravity'], c: 1, e: 'Mineral scratch resistance.' },
-                        { q: 'Softest mineral (Mohs 1)?', a: ['Quartz', 'Talc', 'Gypsum', 'Diamond'], c: 1, e: 'Talc is easiest to scratch.' },
-                        { q: 'Plate boundary moving apart?', a: ['Convergent', 'Divergent', 'Transform', 'Subduction'], c: 1, e: 'Divide = Divergent.' },
-                        { q: 'San Andreas fault type?', a: ['Normal', 'Reverse', 'Strike-slip', 'Thrust'], c: 2, e: 'Transform/Shear.' },
-                        { q: 'Hottest planet?', a: ['Mercury', 'Venus', 'Mars', 'Jupiter'], c: 1, e: 'Thick CO2 atmosphere.' },
-                        { q: 'Red planet?', a: ['Venus', 'Mars', 'Jupiter', 'Saturn'], c: 1, e: 'Iron oxide on surface.' },
-                        { q: 'Largest planet?', a: ['Saturn', 'Uranus', 'Jupiter', 'Neptune'], c: 2, e: 'Gas giant leader.' },
-                        { q: 'Hardest mineral (Mohs 10)?', a: ['Topaz', 'Ruby', 'Diamond', 'Steel'], c: 2, e: 'Diamond is peak hardness.' }
+                        { q: 'Avogadro\'s Number is?', a: ['6.022x10^22', '6.022x10^23', '3.14x10^23', '1.6x10^-19'], c: 1, e: 'Particles per mole.' },
+                        { q: 'Isotopes have same protons but different?', a: ['Electrons', 'Neutrons', 'Shells', 'Charge'], c: 1, e: 'Mass varies.' },
+                        { q: 'Rusting iron is a?', a: ['Physical change', 'Chemical change', 'Nuclear change', 'State change'], c: 1, e: 'New substance formed.' },
+                        { q: 'Exothermic reaction Delta H is?', a: ['Positive', 'Negative', 'Zero', 'Infinite'], c: 1, e: 'Heat released.' },
+                        { q: 'Theoretical yield is?', a: ['Actual result', 'Max product possible', 'Minimum reactant', 'Percent error'], c: 1, e: 'Calculated limit.' },
+                        { q: 'Carbon-14 is used for?', a: ['Medicine', 'Dating fossils', 'Nuclear fuel', 'Batteries'], c: 1, e: 'Radioactive decay clock.' },
+                        { q: 'Melting ice is a?', a: ['Chemical change', 'Physical change', 'Stoic change', 'Endo change'], c: 1, e: 'State change only.' },
+                        { q: 'Specific heat capacity (c) unit?', a: ['J', 'J/g°C', 'g/J°C', '°C'], c: 1, e: 'Energy per mass per temp.' },
+                        { q: 'Limiting reactant is?', a: ['Left over', 'Consumed first', 'Catalyst', 'Product'], c: 1, e: 'Limits total product.' },
+                        { q: 'Law of Conservation of Mass means?', a: ['Mass increases', 'Mass decreases', 'Mass is constant', 'Mass is energy'], c: 2, e: 'Reactant mass = Product mass.' }
                     ],
                     flashcards: [
-                        { f: 'Densest planet?', b: 'Earth' },
-                        { f: 'Most eccentric orbit?', b: 'Mercury' },
-                        { f: 'Mohs 1?', b: 'Talc' }
+                        { f: 'Mole constant?', b: '6.022 x 10^23' },
+                        { f: 'Exothermic Delta H?', b: 'Negative (-)' },
+                        { f: 'Isotopes differ in?', b: 'Neutrons' }
+                    ]
+                },
+                {
+                    id: 'earth_optics', title: 'Earth & Optics', category: 'Science', priority: 'high',
+                    overview: 'Plate tectonics, Volcanoes, and Light.',
+                    concepts: ['Convex: Converging', 'Mohs Scale: Hardness', 'Shield Volcano: Broad', 'Subduction: Plates collide'],
+                    examples: ['Diamond: Mohs 10', 'Convex lens: Magnifying glass'],
+                    mnemonics: 'Converging Convex.',
+                    questions: [
+                        { q: 'Lens that bends light inward?', a: ['Concave', 'Convex', 'Flat', 'Prism'], c: 1, e: 'Convex = Converging.' },
+                        { q: 'Hardest mineral on Mohs scale?', a: ['Quartz', 'Topaz', 'Ruby', 'Diamond'], c: 3, e: 'Diamond is 10.' },
+                        { q: 'Volcano with broad, flat shape?', a: ['Shield', 'Composite', 'Cinder', 'Caldera'], c: 0, e: 'Basaltic lava flows.' },
+                        { q: 'Plate boundary where plates slide past?', a: ['Divergent', 'Convergent', 'Transform', 'Subduction'], c: 2, e: 'e.g., San Andreas.' },
+                        { q: 'Total Internal Reflection occurs at?', a: ['Zero angle', 'Critical angle', '90 degrees', 'Brewster angle'], c: 1, e: 'Light trapped in medium.' },
+                        { q: 'Earth\'s densest planet rank?', a: ['1st', '3rd', '5th', '8th'], c: 0, e: 'Earth is #1 densest.' },
+                        { q: 'Planet with most eccentric orbit?', a: ['Earth', 'Mars', 'Mercury', 'Pluto'], c: 2, e: 'Mercury is most elliptical.' },
+                        { q: 'Softest mineral (Mohs 1)?', a: ['Talc', 'Gypsum', 'Calcite', 'Fluorite'], c: 0, e: 'Talc is softest.' },
+                        { q: 'Volcanic collapse crater name?', a: ['Vent', 'Fissure', 'Caldera', 'Dome'], c: 2, e: 'Large depression.' },
+                        { q: 'Reflection Law: Angle i equals?', a: ['Angle 90', 'Angle r', 'Angle 0', 'Angle 180'], c: 1, e: 'i = r.' }
+                    ],
+                    flashcards: [
+                        { f: 'Convex lens type?', b: 'Converging' },
+                        { f: 'Hardest mineral?', b: 'Diamond' },
+                        { f: 'Densest planet?', b: 'Earth' }
                     ]
                 }
             ],
