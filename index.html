@@ -340,6 +340,22 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
+        const shuffle = (array) => {
+            const copy = [...array];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        };
+
+        const shuffleQuestion = (q) => {
+            const options = [...q.a];
+            const correctVal = options[q.c];
+            const shuffledOpts = shuffle(options);
+            return { ...q, a: shuffledOpts, c: shuffledOpts.indexOf(correctVal) };
+        };
+
         const scienceReference = {
             photosynthesis: {
                 title: 'Photosynthesis',
@@ -864,7 +880,22 @@
                         { q: 'Smallest even prime?', a: ['0', '1', '2', '4'], c: 2, e: '2 is the only even prime.' },
                         { q: 'GCF of 7 and 11?', a: ['1', '7', '11', '77'], c: 0, e: 'They are relatively prime.' },
                         { q: 'Divisibility rule for 4?', a: ['Sum of digits', 'Last digit even', 'Last two digits', 'Ends in 0'], c: 2, e: 'Check last two digits.' },
-                        { q: 'If GCF=4 and LCM=24, product is?', a: ['48', '96', '12', '6'], c: 1, e: 'Product = GCF * LCM = 4 * 24 = 96.' }
+                        { q: 'If GCF=4 and LCM=24, product is?', a: ['48', '96', '12', '6'], c: 1, e: 'Product = GCF * LCM = 4 * 24 = 96.' },
+                        { q: 'Which number is NOT prime?', a: ['17', '19', '21', '13'], c: 2, e: '21 equals 3 x 7, so it is composite.' },
+                        { q: 'A number is divisible by 5 if it?', a: ['Has an even last digit', 'Has a digit sum of 5', 'Ends in 0 or 5', 'Has last two digits divisible by 5'], c: 2, e: 'Numbers ending in 0 or 5 divide by 5.' },
+                        { q: 'A number is divisible by 9 if?', a: ['It ends in 9', 'It is even', 'The last two digits divide by 9', 'The digit sum divides by 9'], c: 3, e: 'Check the sum of the digits.' },
+                        { q: 'Which is neither prime nor composite?', a: ['0', '2', '4', '9'], c: 0, e: '0 and 1 are neither prime nor composite.' },
+                        { q: 'LCM of 6 and 8?', a: ['14', '24', '48', '12'], c: 1, e: '24 is the smallest common multiple.' },
+                        { q: 'GCF of 12 and 18?', a: ['2', '3', '6', '9'], c: 2, e: '6 is the largest shared factor.' },
+                        { q: 'How many factors does a prime number have?', a: ['1', '2', '3', 'Infinite'], c: 1, e: 'Exactly two: 1 and itself.' },
+                        { q: 'Is 91 a prime number?', a: ['Yes', 'No'], c: 1, e: '91 equals 7 x 13.' },
+                        { q: 'Which number is divisible by 4?', a: ['1234', '2326', '1028', '8910'], c: 2, e: 'The last two digits 28 divide by 4.' },
+                        { q: 'Which is a composite number?', a: ['11', '15', '13', '17'], c: 1, e: '15 equals 3 x 5.' },
+                        { q: 'The GCF of two relatively prime numbers is?', a: ['0', '1', 'Their product', 'Always even'], c: 1, e: 'Relatively prime numbers share only the factor 1.' },
+                        { q: 'LCM of 9 and 12?', a: ['18', '36', '24', '108'], c: 1, e: '36 is the smallest common multiple.' },
+                        { q: 'Is 124 divisible by 4?', a: ['Yes', 'No'], c: 0, e: 'The last two digits 24 divide by 4.' },
+                        { q: 'Which list contains only prime numbers?', a: ['1, 2, 3', '2, 3, 5', '4, 5, 7', '9, 11, 13'], c: 1, e: '2, 3, and 5 have no extra factors.' },
+                        { q: 'Which statement about divisors is true?', a: ['1 divides every number', 'Every number divides 1', '0 divides every number', 'Primes have many divisors'], c: 0, e: '1 divides every integer evenly.' }
                     ],
                     flashcards: [
                         { f: 'Only even prime?', b: '2' },
@@ -888,7 +919,22 @@
                         { q: 'Factor x^2 - 7x + 10', a: ['(x-2)(x-5)', '(x+2)(x+5)', '(x-1)(x-10)', '(x+1)(x+10)'], c: 0, e: '-2 + -5 = -7.' },
                         { q: 'Factor x^3 - 1', a: ['(x-1)(x^2+x+1)', '(x-1)^3', '(x+1)(x^2-x+1)', '(x-1)(x^2-x-1)'], c: 0, e: 'Diff of cubes: (a-b)(a^2+ab+b^2).' },
                         { q: 'Factor x^2 + x - 6', a: ['(x+3)(x-2)', '(x-3)(x+2)', '(x+6)(x-1)', '(x-6)(x+1)'], c: 0, e: '3 + -2 = 1, 3 * -2 = -6.' },
-                        { q: 'Is x^2 + 4 factorable in reals?', a: ['Yes', 'No'], c: 1, e: 'Sum of squares is not factorable in reals.' }
+                        { q: 'Is x^2 + 4 factorable in reals?', a: ['Yes', 'No'], c: 1, e: 'Sum of squares is not factorable in reals.' },
+                        { q: 'Factor x^2 - 25', a: ['(x-5)(x+5)', '(x-5)^2', '(x+5)^2', '(x-25)(x+1)'], c: 0, e: 'Difference of squares.' },
+                        { q: 'Which expression is NOT factorable over the reals?', a: ['x^2 - 9', 'x^2 + 9', 'x^2 - 4x + 4', 'x^2 - 16'], c: 1, e: 'A sum of squares has no real factors.' },
+                        { q: 'Factor x^2 + 7x + 12', a: ['(x+2)(x+6)', '(x+3)(x+4)', '(x+1)(x+12)', '(x-3)(x-4)'], c: 1, e: '3 + 4 = 7 and 3 x 4 = 12.' },
+                        { q: 'Factor 2x^2 - 8', a: ['(2x-4)(x+2)', '2(x-2)(x+2)', '2(x-4)(x+4)', '(x-2)(x+4)'], c: 1, e: 'Factor out 2, then use difference of squares.' },
+                        { q: 'Factor x^3 - 27', a: ['(x-3)^3', '(x+3)(x^2-3x+9)', '(x-3)(x^2+3x+9)', '(x-3)(x^2-3x+9)'], c: 2, e: 'Difference of cubes: (a-b)(a^2+ab+b^2).' },
+                        { q: 'A perfect square trinomial matches which pattern?', a: ['a^2 - b^2', 'a^3 + b^3', 'a^2 + 2ab + b^2', 'a^2 - ab + b^2'], c: 2, e: 'It factors to (a+b)^2.' },
+                        { q: 'Factor x^2 - x - 20', a: ['(x+5)(x-4)', '(x-5)(x+4)', '(x-10)(x+2)', '(x-2)(x+10)'], c: 1, e: '-5 + 4 = -1 and -5 x 4 = -20.' },
+                        { q: 'The first step in factoring any expression is?', a: ['Factor out the GCF', 'Use the quadratic formula', 'Guess and check', 'Add like terms'], c: 0, e: 'Always check for a common factor first.' },
+                        { q: 'In SOAP for cubes, the O stands for?', a: ['Original sign', 'Opposite sign', 'Always positive', 'Zero'], c: 1, e: 'SOAP means Same, Opposite, Always Positive.' },
+                        { q: 'Expand (x+5)^2', a: ['x^2 + 25', 'x^2 + 5x + 25', 'x^2 + 10x + 25', 'x^2 - 10x + 25'], c: 2, e: '(a+b)^2 equals a^2 + 2ab + b^2.' },
+                        { q: 'Factor 3x + 6', a: ['3(x + 6)', '3(x + 2)', 'x(3 + 6)', '6(x + 1)'], c: 1, e: '3 is the common monomial factor.' },
+                        { q: 'Factor x^2 + 2x - 15', a: ['(x-5)(x+3)', '(x+5)(x-3)', '(x+15)(x-1)', '(x-15)(x+1)'], c: 1, e: '5 + (-3) = 2 and 5 x (-3) = -15.' },
+                        { q: 'The factored form of a^3 + b^3 is?', a: ['(a+b)^3', '(a+b)(a^2-ab+b^2)', '(a-b)(a^2+ab+b^2)', '(a+b)(a^2+2ab+b^2)'], c: 1, e: 'Sum of cubes follows the SOAP signs.' },
+                        { q: 'Factor x^2 - 121', a: ['(x-11)^2', '(x+11)^2', '(x-11)(x+11)', '(x-121)(x+1)'], c: 2, e: '11^2 = 121, so it is a difference of squares.' },
+                        { q: 'Factor 4x^2 + 12x + 9', a: ['(2x+3)^2', '(2x-3)^2', '(4x+3)(x+3)', '(2x+9)(2x+1)'], c: 0, e: 'Perfect square trinomial: 2(2x)(3) = 12x.' }
                     ],
                     flashcards: [
                         { f: 'a^2 - b^2 = ?', b: '(a-b)(a+b)' },
@@ -912,7 +958,22 @@
                         { q: 'Value of ln e?', a: ['0', '1', 'e', '10'], c: 1, e: 'ln is log base e.' },
                         { q: 'Solve log_x 25 = 2', a: ['2', '5', '10', '25'], c: 1, e: 'x^2 = 25.' },
                         { q: 'Convert 5^2 = 25 to log', a: ['log_2 25=5', 'log_5 2=25', 'log_5 25=2', 'log_25 5=2'], c: 2, e: 'Base stays base.' },
-                        { q: 'log(100) = ?', a: ['1', '2', '3', '10'], c: 1, e: 'Common log base 10.' }
+                        { q: 'log(100) = ?', a: ['1', '2', '3', '10'], c: 1, e: 'Common log base 10.' },
+                        { q: 'Value of log_3 27?', a: ['2', '9', '3', '27'], c: 2, e: '3^3 = 27.' },
+                        { q: 'Solve log_2 x = 4', a: ['8', '16', '2', '4'], c: 1, e: 'x = 2^4 = 16.' },
+                        { q: 'log_b (M/N) equals?', a: ['log M - log N', 'log M / log N', 'log M + log N', 'log(M-N)'], c: 0, e: 'The quotient rule.' },
+                        { q: 'Value of ln 1?', a: ['1', 'e', '0', 'Undefined'], c: 2, e: 'The logarithm of 1 is 0 for any base.' },
+                        { q: 'The log form of 10^3 = 1000 is?', a: ['log_3 1000 = 10', 'log_10 3 = 1000', 'log_1000 10 = 3', 'log_10 1000 = 3'], c: 3, e: 'The base stays the base.' },
+                        { q: 'Expand log(x/y)?', a: ['log x + log y', 'log x / log y', 'log x - log y', 'log(x-y)'], c: 2, e: 'Use the quotient rule.' },
+                        { q: 'log_b (b^x) equals?', a: ['b', 'x', 'x^b', '1'], c: 1, e: 'Logs and exponents are inverses.' },
+                        { q: 'Simplify log 2 + log 5', a: ['log 7', 'log 2.5', 'log 10', 'log 25'], c: 2, e: 'The product rule gives log(2 x 5) = log 10 = 1.' },
+                        { q: 'Value of log_5 1?', a: ['5', '1', 'undefined', '0'], c: 3, e: 'The log of 1 is always 0.' },
+                        { q: 'Solve 5^x = 125', a: ['2', '25', '3', '4'], c: 2, e: '5^3 = 125.' },
+                        { q: 'Value of ln e^4?', a: ['0', 'e', '4', '4e'], c: 2, e: 'ln and e cancel out.' },
+                        { q: 'Which is a valid log law?', a: ['log(M+N) = log M + log N', 'log(MN) = log M + log N', 'log(MN) = log M x log N', 'log(M-N) = log M / log N'], c: 1, e: 'Logs turn products into sums.' },
+                        { q: 'A common logarithm uses which base?', a: ['2', 'e', '10', '100'], c: 2, e: 'log with no base means log base 10.' },
+                        { q: 'Rewriting 3 log x gives?', a: ['log 3x', 'log(x+3)', 'log 3 + log x', 'log x^3'], c: 3, e: 'The power rule moves the coefficient to an exponent.' },
+                        { q: 'Solve log_7 x = 1', a: ['0', '7', '1', '49'], c: 1, e: 'x = 7^1 = 7.' }
                     ],
                     flashcards: [
                         { f: 'log_b 1 = ?', b: '0' },
@@ -936,7 +997,22 @@
                         { q: 'Quadrant where sin is pos, cos is neg?', a: ['I', 'II', 'III', 'IV'], c: 1, e: 'II (All Students...).' },
                         { q: 'If sin = 3/5, what is csc?', a: ['3/5', '4/5', '5/3', '5/4'], c: 2, e: 'csc = 1/sin.' },
                         { q: '180 degrees in radians?', a: ['pi/2', 'pi', '2pi', '3pi/2'], c: 1, e: 'Standard conversion.' },
-                        { q: 'sec^2 x - tan^2 x = ?', a: ['0', '1', '-1', 'sin x'], c: 1, e: 'Derived identity.' }
+                        { q: 'sec^2 x - tan^2 x = ?', a: ['0', '1', '-1', 'sin x'], c: 1, e: 'Derived identity.' },
+                        { q: 'sin 0 degrees = ?', a: ['0', '0.5', '1', 'undefined'], c: 0, e: 'The y-coordinate at 0 degrees is 0.' },
+                        { q: 'cos 0 degrees = ?', a: ['0', '1', '0.5', '-1'], c: 1, e: 'The x-coordinate at 0 degrees is 1.' },
+                        { q: 'The reciprocal of sin is?', a: ['cos', 'cot', 'csc', 'sec'], c: 2, e: 'csc equals 1/sin.' },
+                        { q: 'The reciprocal of tan is?', a: ['cot', 'sec', 'csc', 'cos'], c: 0, e: 'cot equals 1/tan.' },
+                        { q: 'sin 90 degrees = ?', a: ['0', '0.5', 'undefined', '1'], c: 3, e: 'The y-coordinate at 90 degrees is 1.' },
+                        { q: 'cos 60 degrees = ?', a: ['0.5', '0.707', '0.866', '1'], c: 0, e: 'A standard unit circle value.' },
+                        { q: 'Where are sin and cos both negative?', a: ['I', 'II', 'III', 'IV'], c: 2, e: 'ASTC: Quadrant III has only tangent positive.' },
+                        { q: 'One radian is approximately?', a: ['57 degrees', '90 degrees', '3.14 degrees', '180 degrees'], c: 0, e: 'A radian is about 57.3 degrees.' },
+                        { q: 'If cos = 4/5 and sin is positive, then sin = ?', a: ['5/3', '3/5', '4/5', '9/25'], c: 1, e: 'sqrt(1 - 16/25) = 3/5.' },
+                        { q: '90 degrees in radians is?', a: ['pi/4', 'pi', 'pi/2', '2pi'], c: 2, e: '90 degrees is half of 180 degrees.' },
+                        { q: 'tan 0 degrees = ?', a: ['0', '1', 'undefined', '0.5'], c: 0, e: 'sin 0 = 0 and cos 0 = 1.' },
+                        { q: 'csc 30 degrees = ?', a: ['0.5', '1', 'undefined', '2'], c: 3, e: 'csc = 1/sin and sin 30 = 0.5.' },
+                        { q: 'Which identity is correct?', a: ['1 + tan^2 = sec^2', '1 - tan^2 = sec^2', 'tan^2 = sec^2 + 1', 'sec^2 = sin^2 + 1'], c: 0, e: 'The Pythagorean identity connecting tan and sec.' },
+                        { q: 'Which angle has a sine of 1?', a: ['0 degrees', '90 degrees', '45 degrees', '180 degrees'], c: 1, e: 'sin 90 = 1.' },
+                        { q: 'In SOH CAH TOA, CAH means?', a: ['Sine = Opposite/Hypotenuse', 'Cosine = Opposite/Adjacent', 'Cosine = Adjacent/Hypotenuse', 'Tangent = Adjacent/Hypotenuse'], c: 2, e: 'CAH: Cosine equals Adjacent over Hypotenuse.' }
                     ],
                     flashcards: [
                         { f: 'sin/cos = ?', b: 'tan' },
@@ -961,7 +1037,22 @@
                         { q: 'Effect of extreme outlier on Median?', a: ['Big effect', 'Little/No effect', 'Makes it 0', 'Doubles it'], c: 1, e: 'Median only cares about order.' },
                         { q: 'Sum of deviations from mean is?', a: ['0', '1', 'n', 'Variance'], c: 0, e: 'Mathematical property of mean.' },
                         { q: 'Mode of 1, 2, 3?', a: ['1', '2', '3', 'None'], c: 3, e: 'All unique.' },
-                        { q: 'Mean of first 5 odd numbers?', a: ['3', '4', '5', '6'], c: 2, e: '1,3,5,7,9 avg is 5.' }
+                        { q: 'Mean of first 5 odd numbers?', a: ['3', '4', '5', '6'], c: 2, e: '1,3,5,7,9 avg is 5.' },
+                        { q: 'Mean of 3, 5, 7, 9?', a: ['5', '6', '7', '8'], c: 1, e: '24 / 4 = 6.' },
+                        { q: 'Median of 8, 3, 5, 1?', a: ['3', '4', '5', '6'], c: 1, e: 'Sorted 1, 3, 5, 8 gives a middle average of 4.' },
+                        { q: 'A data set with no repeated value has?', a: ['One mode', 'No mode', 'Two modes', 'Infinite modes'], c: 1, e: 'No value occurs more often than the others.' },
+                        { q: 'Which measure is affected most by outliers?', a: ['Mean', 'Median', 'Mode', 'IQR'], c: 0, e: 'The mean uses every value, so extremes pull it.' },
+                        { q: 'Mean of the first four even numbers?', a: ['4', '5', '6', '10'], c: 1, e: '(2+4+6+8) / 4 = 5.' },
+                        { q: 'Range is calculated as?', a: ['Max - Min', 'Q3 - Q1', 'Mean - Median', 'Max + Min'], c: 0, e: 'The range is the highest minus the lowest value.' },
+                        { q: 'Mode of 4, 4, 5, 5, 6?', a: ['4', '5', 'Both 4 and 5', '6'], c: 2, e: 'Two values tie for most frequent, so it is bimodal.' },
+                        { q: 'Median of 2, 4, 6?', a: ['2', '4', '5', '6'], c: 1, e: 'The middle of the sorted list is 4.' },
+                        { q: 'One value far above the rest pulls the mean?', a: ['Toward it', 'Away from it', 'No change', 'To zero'], c: 0, e: 'The mean moves toward the extreme value.' },
+                        { q: 'Mean of 10, 20, 30, 40?', a: ['20', '25', '30', '35'], c: 1, e: '100 / 4 = 25.' },
+                        { q: 'The weighted mean accounts for?', a: ['Only the biggest value', 'Relative importance of values', 'Outliers only', 'The mode'], c: 1, e: 'Weights show how much each value matters.' },
+                        { q: 'Median of 3, 7, 9, 15?', a: ['7', '8', '9', '11'], c: 1, e: 'The middle pair 7 and 9 averages to 8.' },
+                        { q: 'In a right-skewed data set?', a: ['Mean = Median', 'Mean > Median', 'Mean < Median', 'There is no mode'], c: 1, e: 'The mean is pulled toward the long right tail.' },
+                        { q: 'The sum of deviations from the mean always equals?', a: ['0', '1', 'n', 'Variance'], c: 0, e: 'Positive and negative deviations cancel out.' },
+                        { q: 'Best center measure for shoe sizes in a store?', a: ['Mean', 'Mode', 'Range', 'Variance'], c: 1, e: 'The most common size is most useful for stock.' }
                     ],
                     flashcards: [
                         { f: 'Sensitive to outliers?', b: 'Mean' },
@@ -985,8 +1076,23 @@
                         { q: 'Ha: mu > 50 is a?', a: ['One-tailed test', 'Two-tailed test', 'No-tailed test', 'Z-test'], c: 0, e: 'Directional.' },
                         { q: 'H0 always contains?', a: ['>', '<', '!=', '='], c: 3, e: 'H0 is the equality.' },
                         { q: 'If you decrease alpha, Type II error?', a: ['Decreases', 'Increases', 'Stays same', 'Goes to 0'], c: 1, e: 'Trade-off.' },
-                        { q: 'Z-score formula?', a: '(x-mu)/sigma', b: '(mu-x)/sigma', c: 'x/sigma', d: 'sigma/x', c: 0, e: 'Distance in std devs.' },
-                        { q: 'Standard normal mean is?', a: ['1', '0', '0.5', '100'], c: 1, e: 'Z-dist center is 0.' }
+                        { q: 'Z-score formula?', a: ['(x-mu)/sigma', '(mu-x)/sigma', 'x/sigma', 'sigma/x'], c: 0, e: 'Distance in standard deviations from the mean.' },
+                        { q: 'Standard normal mean is?', a: ['1', '0', '0.5', '100'], c: 1, e: 'Z-dist center is 0.' },
+                        { q: 'The alternative Ha: mu not equal 50 gives a?', a: ['One-tailed test', 'Two-tailed test', 'No-tailed test', 'Chi-square test'], c: 1, e: 'A not-equal alternative is non-directional.' },
+                        { q: 'With H0 we never do what?', a: ['Reject it', 'Accept it', 'Test it', 'State it'], c: 1, e: 'We only fail to reject H0, never accept it.' },
+                        { q: 'The p-value is computed assuming?', a: ['Ha is true', 'H0 is true', 'Both are true', 'Neither is true'], c: 1, e: 'The p-value is calculated under the null hypothesis.' },
+                        { q: 'The power of a test equals?', a: ['alpha', '1 - alpha', '1 - beta', 'beta'], c: 2, e: 'Power is the chance of correctly rejecting a false H0.' },
+                        { q: 'Failing to reject a false H0 is which error?', a: ['Type I', 'Type II', 'No error', 'Sampling error'], c: 1, e: 'Type II is a false negative.' },
+                        { q: 'Increasing sample size does what to power?', a: ['Increases it', 'Decreases it', 'No change', 'Removes it'], c: 0, e: 'More data raises the power of the test.' },
+                        { q: 'If the p-value is greater than alpha, you?', a: ['Reject H0', 'Fail to reject H0', 'Accept Ha', 'Restart'], c: 1, e: 'There is not enough evidence against H0.' },
+                        { q: 'ANOVA uses which test statistic?', a: ['z', 't', 'F', 'r'], c: 2, e: 'ANOVA uses the F-statistic.' },
+                        { q: 'A rejection region is the set of values that?', a: ['Reject H0', 'Accept H0', 'Equal the mean', 'Match the sample'], c: 0, e: 'If the statistic lands there, H0 is rejected.' },
+                        { q: 'Which is a valid null hypothesis?', a: ['mu > 10', 'mu < 10', 'mu not equal 10', 'mu = 10'], c: 3, e: 'The null always contains equality.' },
+                        { q: 'The significance level alpha is chosen?', a: ['After seeing data', 'Before the experiment', 'By the software', 'At random'], c: 1, e: 'Alpha is set in advance.' },
+                        { q: 'A two-tailed test at alpha 0.05 splits the alpha how?', a: ['0.05 each side', '0.025 each side', '0.10 each side', 'It does not split'], c: 1, e: 'Each tail receives alpha/2.' },
+                        { q: 'A very small p-value provides?', a: ['No effect', 'Evidence against H0', 'Proof H0 is true', 'Proof of a bad sample'], c: 1, e: 'Extreme results under H0 suggest H0 is unlikely.' },
+                        { q: 'A Type I error is also called a?', a: ['False positive', 'False negative', 'Missed effect', 'Correct decision'], c: 0, e: 'Rejecting a true null is a false positive.' },
+                        { q: 'A claim that the average exceeds 160 cm gives which Ha?', a: ['mu <= 160', 'mu = 160', 'mu > 160', 'mu not equal 160'], c: 2, e: 'The directional claim belongs in Ha.' }
                     ],
                     flashcards: [
                         { f: 'Type I Error name?', b: 'Alpha (False Positive)' },
@@ -1011,7 +1117,22 @@
                         { q: 'If ANOVA p = 0.01, we?', a: ['Reject H0', 'Fail to reject H0', 'Accept H0', 'Need z-test'], c: 0, e: 'p < 0.05.' },
                         { q: 'Correlation does not imply?', a: ['Relationship', 'Causation', 'Slope', 'Intercept'], c: 1, e: 'Classic stats rule.' },
                         { q: 'r ranges from?', a: ['0 to 1', '-1 to 1', '-100 to 100', '0 to infinity'], c: 1, e: 'Standard correlation range.' },
-                        { q: 'F-statistic is for?', a: ['Z-test', 'T-test', 'ANOVA', 'Chi-square'], c: 2, e: 'ANOVA uses F-dist.' }
+                        { q: 'F-statistic is for?', a: ['Z-test', 'T-test', 'ANOVA', 'Chi-square'], c: 2, e: 'ANOVA uses F-dist.' },
+                        { q: 'A correlation of r = 0 means?', a: ['Perfect positive', 'No linear correlation', 'Perfect negative', 'Causation'], c: 1, e: 'Zero means there is no linear relationship.' },
+                        { q: 'The coefficient of determination is?', a: ['r', 'r^2', 'sqrt(r)', '1 - r'], c: 1, e: 'r^2 is the proportion of explained variance.' },
+                        { q: 'If r^2 = 0.64, the correlation r could be?', a: ['0.8', '0.32', '0.64', '0.4'], c: 0, e: 'The square root of 0.64 is 0.8.' },
+                        { q: 'A residual is the observed value minus?', a: ['The predicted value', 'The mean', 'The slope', 'The intercept'], c: 0, e: 'Residual equals y - y-hat.' },
+                        { q: 'Which method fits the least-squares regression line?', a: ['Minimizing squared residuals', 'Substitution', 'Long division', 'Prime factoring'], c: 0, e: 'Least squares minimizes the squared residuals.' },
+                        { q: 'In ANOVA, degrees of freedom between groups is?', a: ['N - k', 'k - 1', 'N - 1', 'k + 1'], c: 1, e: 'k is the number of groups.' },
+                        { q: 'A large F-ratio suggests that?', a: ['The group means differ', 'Nothing at all', 'All means are equal', 'The effect is tiny'], c: 0, e: 'Large F means between-group variance dominates.' },
+                        { q: 'Which test identifies which specific groups differ after ANOVA?', a: ['Post-hoc test', 'Z-test', 'Chi-square test', 'Correlation test'], c: 0, e: 'Post-hoc tests like Tukey compare specific pairs.' },
+                        { q: 'An influential point can?', a: ['Shift the regression line', 'Have no effect', 'Delete data', 'Increase the sample'], c: 0, e: 'An outlier can strongly change the fitted line.' },
+                        { q: 'Homoscedasticity means the residuals have?', a: ['Constant variance', 'Zero variance', 'Rising variance', 'Missing values'], c: 0, e: 'The spread stays constant across all X levels.' },
+                        { q: 'The null hypothesis in ANOVA states that?', a: ['At least one mean differs', 'All group means are equal', 'All means are zero', 'No data exists'], c: 1, e: 'The null assumes equality of all group means.' },
+                        { q: 'A Z-score of -1.5 means the value is?', a: ['Above the mean', 'At the mean', 'Below the mean', 'Impossible'], c: 2, e: 'A negative z-score is below the mean.' },
+                        { q: 'About 95 percent of a normal distribution lies within?', a: ['1 std dev', '2 std devs', '3 std devs', '0 std devs'], c: 1, e: 'The empirical rule gives 95 percent within 2 std devs.' },
+                        { q: 'In Y = a + bX, the value b is the?', a: ['Intercept', 'Slope', 'Residual', 'Correlation'], c: 1, e: 'b is the slope of the line.' },
+                        { q: 'Total variation in ANOVA equals?', a: ['Between + within', 'Between x within', 'Between - within', 'Within only'], c: 0, e: 'Total variation splits into between and within parts.' }
                     ],
                     flashcards: [
                         { f: 'ANOVA test statistic?', b: 'F' },
@@ -1032,11 +1153,26 @@
                         { q: 'P(A and B) for independent events?', a: ['P(A)+P(B)', 'P(A)*P(B)', 'P(A)-P(B)', 'P(A)/P(B)'], c: 1, e: 'Multiplication rule.' },
                         { q: 'Empirical rule: % within 2 std devs?', a: ['68%', '95%', '99.7%', '50%'], c: 1, e: 'Stats standard.' },
                         { q: 'Probability of rolling a 7 on a 6-sided die?', a: ['1/6', '1/7', '0', '1'], c: 2, e: 'Impossible outcome.' },
-                        { q: 'Formula for C(n,r)?', a: 'n!/(n-r)!', b: 'n!/r!(n-r)!', c: 'r!/n!', d: 'n^r', c: 1, e: 'Includes r! to remove order.' },
+                        { q: 'Formula for C(n,r)?', a: ['n!/(n-r)!', 'n!/(r!(n-r)!)', 'r!/n!', 'n^r'], c: 1, e: 'Dividing by r! removes the ordering.' },
                         { q: 'Standard Normal Curve mu and sigma?', a: ['0 and 1', '1 and 0', '100 and 15', '50 and 10'], c: 0, e: 'Standardized values.' },
                         { q: 'Margin of Error decreases if?', a: ['n decreases', 'n increases', 'sigma increases', 'alpha increases'], c: 1, e: 'More data = more precision.' },
                         { q: 'P(Heads and Tails) in one flip?', a: ['0.25', '0.5', '0', '1'], c: 2, e: 'Mutually exclusive.' },
-                        { q: 'Normal curve is also called?', a: ['Bell curve', 'S-curve', 'Box plot', 'Scatter plot'], c: 0, e: 'Visual shape.' }
+                        { q: 'Normal curve is also called?', a: ['Bell curve', 'S-curve', 'Box plot', 'Scatter plot'], c: 0, e: 'Visual shape.' },
+                        { q: 'The complement rule states P(not A) = ?', a: ['1 + P(A)', 'P(A)', '1 - P(A)', '0'], c: 2, e: 'The complement rule subtracts from 1.' },
+                        { q: 'C(5, 2) = ?', a: ['10', '20', '5', '25'], c: 0, e: '5! / (2! x 3!) = 10.' },
+                        { q: 'The permutation formula P(n, r) is?', a: ['n! / (n-r)!', 'n! / r!', 'r! / n!', 'n x r'], c: 0, e: 'Permutations count ordered arrangements.' },
+                        { q: 'The probability of an impossible event is?', a: ['0.5', '1', '0', 'Negative'], c: 2, e: 'Impossible events have probability 0.' },
+                        { q: 'Probability of at least one head in two coin flips?', a: ['0.25', '0.75', '0.5', '1'], c: 1, e: '1 - 0.5 x 0.5 = 0.75.' },
+                        { q: 'C(n, r) equals which other combination?', a: ['C(n, r+1)', 'C(n, n-r)', 'C(n, n+r)', 'C(r, n)'], c: 1, e: 'The binomial coefficient is symmetric.' },
+                        { q: 'P(A or B) for mutually exclusive events is?', a: ['P(A) x P(B)', 'P(A) - P(B)', 'P(A) + P(B)', 'P(A) / P(B)'], c: 2, e: 'Add the probabilities when events cannot both occur.' },
+                        { q: 'The empirical rule gives what percent within 3 std devs?', a: ['68%', '95%', '50%', '99.7%'], c: 3, e: 'Nearly all data falls within 3 std devs.' },
+                        { q: 'The standard deviation of the standard normal curve is?', a: ['0', '1', '2', '100'], c: 1, e: 'The standard normal has sigma equal to 1.' },
+                        { q: 'A higher confidence level makes the interval?', a: ['Wider', 'Narrower', 'Unchanged', 'Zero'], c: 0, e: 'More confidence requires a wider range.' },
+                        { q: 'On a fair coin, P(Heads) is?', a: ['0', '0.5', '1', '0.25'], c: 1, e: 'One favorable outcome out of two.' },
+                        { q: 'For independent events, P(A and B) is?', a: ['P(A) x P(B)', 'P(A) + P(B)', 'P(A) - P(B)', 'P(B) / P(A)'], c: 0, e: 'The multiplication rule for independence.' },
+                        { q: 'Probability values always range from?', a: ['0 to 1', '-1 to 1', '0 to 100', '1 to 10'], c: 0, e: 'Probability is between 0 and 1.' },
+                        { q: 'C(10, 3) = ?', a: ['720', '120', '90', '30'], c: 1, e: '10! / (3! x 7!) = 120.' },
+                        { q: 'The sample space is?', a: ['The best outcome', 'One outcome only', 'All possible outcomes', 'The mean'], c: 2, e: 'The sample space lists every possible result.' }
                     ],
                     flashcards: [
                         { f: '68% range in Z?', b: '+/- 1' },
@@ -1055,13 +1191,28 @@
                         { q: 'Graph for 5-number summary?', a: ['Histogram', 'Boxplot', 'Pie Chart', 'Scatterplot'], c: 1, e: 'Box-and-whisker plot.' },
                         { q: 'Which graph shows original values?', a: ['Boxplot', 'Histogram', 'Stem-and-Leaf', 'Pie Chart'], c: 2, e: 'Leaves are digits.' },
                         { q: 'X-axis usually has the?', a: ['Dependent variable', 'Independent variable', 'Parameter', 'Error'], c: 1, e: 'Standard graphing convention.' },
-                        { q: 'IQR is?', a: 'Q3 - Q1', b: 'Q4 - Q0', c: 'Max - Min', d: 'Mean - Median', c: 0, e: 'Interquartile range.' },
+                        { q: 'IQR is?', a: ['Q3 - Q1', 'Q4 - Q0', 'Max - Min', 'Mean - Median'], c: 0, e: 'Interquartile range equals Q3 minus Q1.' },
                         { q: 'Frequency distribution total sum of rel freq?', a: ['0', '1', '100', 'n'], c: 1, e: 'Proportions sum to 1.' },
                         { q: 'A parameter refers to a?', a: ['Sample', 'Population', 'Individual', 'Statistic'], c: 1, e: 'P for Population, S for Sample.' },
                         { q: '90th percentile means?', a: ['You failed', '90% scored lower/equal', '10% scored lower', 'Score is 90'], c: 1, e: 'Relative standing.' },
                         { q: 'Slope on distance-time graph is?', a: ['Distance', 'Time', 'Velocity', 'Acceleration'], c: 2, e: 'Rise (dist) / Run (time).' },
                         { q: 'Bars touch in a?', a: ['Bar graph', 'Histogram', 'Pie chart', 'Boxplot'], c: 1, e: 'For continuous data.' },
-                        { q: 'Outliers in a boxplot are?', a: ['In the box', 'Outside whiskers', 'At the median', 'Invisible'], c: 1, e: 'Usually marked with dots.' }
+                        { q: 'Outliers in a boxplot are?', a: ['In the box', 'Outside whiskers', 'At the median', 'Invisible'], c: 1, e: 'Usually marked with dots.' },
+                        { q: 'Which graph best shows parts of a whole?', a: ['Pie chart', 'Line graph', 'Scatterplot', 'Boxplot'], c: 0, e: 'Pie charts show proportions of a total.' },
+                        { q: 'Which graph best shows a trend over time?', a: ['Pie chart', 'Line graph', 'Dot plot', 'Pareto chart'], c: 1, e: 'Line graphs show change across time.' },
+                        { q: 'A Pareto chart is a?', a: ['Circle graph', 'Line graph', 'Sorted bar chart', 'Boxplot'], c: 2, e: 'Bars sorted from highest to lowest frequency.' },
+                        { q: 'An ogive displays?', a: ['Cumulative frequency', 'Raw data', 'Two variables', 'Quartiles only'], c: 0, e: 'An ogive plots cumulative frequency.' },
+                        { q: 'The midpoint of a class is?', a: ['Upper - Lower', 'Lower x Upper', '(Lower + Upper) / 2', 'Upper + Lower'], c: 2, e: 'Average the class limits.' },
+                        { q: 'A frequency polygon connects?', a: ['Pie slices', 'Midpoints of histogram bars', 'Corners of the box', 'Raw values'], c: 1, e: 'It joins the class midpoints.' },
+                        { q: 'Q1 is equal to which percentile?', a: ['10th', '25th', '50th', '75th'], c: 1, e: 'The first quartile is the 25th percentile.' },
+                        { q: 'Relative frequency is?', a: ['f / n', 'f x n', 'n / f', 'f + n'], c: 0, e: 'It is the class frequency divided by the total.' },
+                        { q: 'Deciles divide data into how many parts?', a: ['4', '2', '10', '100'], c: 2, e: 'Deciles create 10 equal groups.' },
+                        { q: 'Which graph uses dots along a number line?', a: ['Boxplot', 'Dot plot', 'Ogive', 'Pie chart'], c: 1, e: 'A dot plot shows frequency for small data sets.' },
+                        { q: 'A statistic describes a?', a: ['Sample', 'Population', 'Parameter', 'Census'], c: 0, e: 'Statistics come from samples.' },
+                        { q: 'The upper boundary for boxplot outliers is?', a: ['Q3 - IQR', 'Q1 + IQR', 'Q3 + 1.5 x IQR', 'Max + Min'], c: 2, e: 'Points beyond this boundary are outliers.' },
+                        { q: 'Interpolation estimates values?', a: ['Between known points', 'Outside the data range', 'At the mean', 'At zero'], c: 0, e: 'Interpolation works inside the data range.' },
+                        { q: 'Extrapolation is risky because it?', a: ['Uses too much data', 'Predicts outside the data range', 'Sorts the data', 'Removes outliers'], c: 1, e: 'Trends may not continue beyond known data.' },
+                        { q: 'The box of a boxplot contains the?', a: ['Middle 50 percent', 'Top 10 percent', 'The mean only', 'The outliers'], c: 0, e: 'The box spans Q1 to Q3.' }
                     ],
                     flashcards: [
                         { f: 'P in P-S mnemonic?', b: 'Population (Parameter)' },
@@ -1086,7 +1237,22 @@
                         { q: 'What does ATP synthase use to make ATP?', a: ['A proton gradient', 'DNA strands', 'Carbon dioxide', 'Oxygen bubbles'], c: 0, e: 'ATP synthase converts proton-gradient energy into ATP.' },
                         { q: 'What are the final useful products of photosynthesis?', a: ['Glucose and oxygen', 'Water and heat', 'ATP and lactic acid', 'Carbon monoxide and glucose'], c: 0, e: 'Photosynthesis stores energy in glucose and releases oxygen.' },
                         { q: 'What part of the chloroplast surrounds thylakoids?', a: ['Cell wall', 'Stroma', 'Golgi body', 'Nucleolus'], c: 1, e: 'The stroma is the fluid-filled region around thylakoids.' },
-                        { q: 'What links Photosystem II to Photosystem I?', a: ['Ribosome', 'Electron transport chain', 'Cell membrane', 'Lysosome'], c: 1, e: 'The electron transport chain carries electrons between the photosystems.' }
+                        { q: 'What links Photosystem II to Photosystem I?', a: ['Ribosome', 'Electron transport chain', 'Cell membrane', 'Lysosome'], c: 1, e: 'The electron transport chain carries electrons between the photosystems.' },
+                        { q: 'Which molecule is split during the light reactions?', a: ['Carbon dioxide', 'Water', 'Glucose', 'Oxygen'], c: 1, e: 'Water undergoes photolysis.' },
+                        { q: 'The Calvin Cycle uses which gas?', a: ['Oxygen', 'Nitrogen', 'Carbon dioxide', 'Hydrogen'], c: 2, e: 'CO2 is fixed into sugar in the Calvin Cycle.' },
+                        { q: 'The overall photosynthesis equation is?', a: ['C6H12O6 + 6O2 -> 6CO2 + 6H2O', '6CO2 + 6H2O -> C6H12O6 + 6O2', '6O2 + 6H2O -> C6H12O6', 'CO2 + O2 -> Glucose'], c: 1, e: 'Plants use CO2 and water with light to make glucose and oxygen.' },
+                        { q: 'What carries energy between the light reactions and the Calvin Cycle?', a: ['ATP and NADPH', 'DNA and RNA', 'Oxygen only', 'Glucose'], c: 0, e: 'ATP and NADPH power sugar synthesis.' },
+                        { q: 'Which light color does chlorophyll reflect most?', a: ['Red', 'Blue', 'Green', 'Violet'], c: 2, e: 'Reflected green light makes leaves look green.' },
+                        { q: 'In which organelle does photosynthesis occur?', a: ['Chloroplast', 'Ribosome', 'Mitochondrion', 'Golgi body'], c: 0, e: 'Chloroplasts are the site of photosynthesis.' },
+                        { q: 'What provides the carbon in glucose?', a: ['Water', 'Oxygen', 'ATP', 'Carbon dioxide'], c: 3, e: 'CO2 supplies carbon fixed in the Calvin Cycle.' },
+                        { q: 'What does ATP synthase produce?', a: ['Glucose', 'DNA', 'ATP', 'Protein'], c: 2, e: 'It converts the proton gradient into ATP.' },
+                        { q: 'Which photosystem comes first in the electron chain?', a: ['Photosystem I', 'Photosystem II', 'The Calvin enzyme', 'ATP synthase'], c: 1, e: 'PSII splits water and starts the chain.' },
+                        { q: 'Do plants also perform respiration?', a: ['Yes', 'No'], c: 0, e: 'Plants respire as well as photosynthesize.' },
+                        { q: 'Which is a waste product of photosynthesis?', a: ['Glucose', 'Water', 'Oxygen', 'NADPH'], c: 2, e: 'Oxygen is released as a by-product.' },
+                        { q: 'The light-independent reactions are also called the?', a: ['Krebs Cycle', 'Calvin Cycle', 'Photolysis', 'Glycolysis'], c: 1, e: 'The Calvin Cycle does not need light directly.' },
+                        { q: 'Which structure contains chlorophyll?', a: ['Cell wall', 'Stroma', 'Cytoplasm', 'Thylakoid'], c: 3, e: 'Thylakoid membranes hold chlorophyll.' },
+                        { q: 'What molecule is reduced to NADPH?', a: ['NADP+', 'ATP', 'ADP', 'Oxygen'], c: 0, e: 'Photosystem I reduces NADP+.' },
+                        { q: 'The energy driving photosynthesis comes from?', a: ['Soil minerals', 'Glucose', 'Sunlight', 'Oxygen'], c: 2, e: 'Light energy drives the light reactions.' }
                     ],
                     flashcards: [
                         { f: 'Light reactions location?', b: 'Thylakoid membranes' },
@@ -1112,7 +1278,22 @@
                         { q: 'If DNA has 15% cytosine, what percent guanine does it have?', a: ['15%', '35%', '50%', '85%'], c: 0, e: 'Chargaff\'s Rule says C equals G.' },
                         { q: 'What process copies DNA into mRNA?', a: ['Translation', 'Transcription', 'Replication fork closing', 'Diffusion'], c: 1, e: 'Transcription makes RNA from a DNA template.' },
                         { q: 'What process decodes mRNA into protein?', a: ['Translation', 'Respiration', 'Mitosis', 'Diffusion'], c: 0, e: 'Translation reads mRNA at the ribosome.' },
-                        { q: 'What is the central dogma?', a: ['RNA -> DNA -> Protein', 'Protein -> DNA -> RNA', 'DNA -> RNA -> Protein', 'DNA -> Protein -> RNA'], c: 2, e: 'Genetic information generally flows from DNA to RNA to protein.' }
+                        { q: 'What is the central dogma?', a: ['RNA -> DNA -> Protein', 'Protein -> DNA -> RNA', 'DNA -> RNA -> Protein', 'DNA -> Protein -> RNA'], c: 2, e: 'Genetic information generally flows from DNA to RNA to protein.' },
+                        { q: 'Which organelle packages and ships proteins?', a: ['Ribosome', 'Golgi apparatus', 'Nucleolus', 'Mitochondrion'], c: 1, e: 'The Golgi modifies and ships proteins.' },
+                        { q: 'The endoplasmic reticulum mainly?', a: ['Transports materials', 'Stores DNA', 'Makes light energy', 'Digests waste'], c: 0, e: 'The ER transports materials through the cell.' },
+                        { q: 'Which organelle breaks down waste with enzymes?', a: ['Ribosome', 'Vacuole', 'Lysosome', 'Chloroplast'], c: 2, e: 'Lysosomes contain digestive enzymes.' },
+                        { q: 'Which cell part controls what enters and exits?', a: ['Nucleus', 'Golgi body', 'Ribosome', 'Cell membrane'], c: 3, e: 'The membrane regulates entry and exit.' },
+                        { q: 'A nucleotide contains?', a: ['Sugar, phosphate, and base', 'Only sugar', 'Two bases', 'Only phosphate'], c: 0, e: 'Nucleotides have three parts.' },
+                        { q: 'In DNA, adenine pairs with?', a: ['Uracil', 'Thymine', 'Guanine', 'Cytosine'], c: 1, e: 'A pairs with T in DNA.' },
+                        { q: 'In DNA, cytosine pairs with?', a: ['Thymine', 'Adenine', 'Guanine', 'Uracil'], c: 2, e: 'C pairs with G.' },
+                        { q: 'If a DNA sample is 30 percent adenine, what percent thymine does it have?', a: ['20%', '60%', '70%', '30%'], c: 3, e: 'Chargaff rule: A equals T.' },
+                        { q: 'Total purines equal?', a: ['Total pyrimidines', 'Half the base count', 'Zero', 'Total proteins'], c: 0, e: 'A + G equals T + C.' },
+                        { q: 'DNA is best described as a?', a: ['Single strand', 'Double helix', 'Triple ring', 'Flat sheet'], c: 1, e: 'DNA winds into a double helix.' },
+                        { q: 'Which fluid holds the organelles in place?', a: ['Nucleus', 'Cytoplasm', 'Membrane', 'Stroma'], c: 1, e: 'Cytoplasm suspends the organelles.' },
+                        { q: 'Which organelle is found only in plant cells?', a: ['Mitochondrion', 'Ribosome', 'Chloroplast', 'Nucleus'], c: 2, e: 'Chloroplasts perform photosynthesis in plants.' },
+                        { q: 'The large storage organelle in plant cells is the?', a: ['Lysosome', 'Golgi body', 'Nucleolus', 'Vacuole'], c: 3, e: 'Plant cells have a large central vacuole.' },
+                        { q: 'Which molecule carries the genetic code from DNA to the ribosome?', a: ['mRNA', 'ATP', 'Lipid', 'Glucose'], c: 0, e: 'Messenger RNA carries the code.' },
+                        { q: 'Translation takes place in the?', a: ['Nucleus', 'Ribosome', 'Golgi body', 'Vacuole'], c: 1, e: 'mRNA is decoded into protein at the ribosome.' }
                     ],
                     flashcards: [
                         { f: 'DNA base pair for A?', b: 'T' },
@@ -1138,7 +1319,22 @@
                         { q: 'What does Delta H < 0 mean?', a: ['Endothermic', 'Exothermic', 'No heat change', 'Always spontaneous'], c: 1, e: 'Negative enthalpy means heat leaves the system.' },
                         { q: 'What does Q = mc(Delta T) calculate?', a: ['Pressure', 'Heat change', 'Density', 'Atomic radius'], c: 1, e: 'The formula gives heat transferred from mass, specific heat, and temperature change.' },
                         { q: 'Which is a chemical change?', a: ['Boiling water', 'Tearing paper', 'Rusting iron', 'Freezing juice'], c: 2, e: 'Rusting forms a new substance, iron oxide.' },
-                        { q: 'Which is a physical change?', a: ['Burning wood', 'Souring milk', 'Melting ice', 'Digesting food'], c: 2, e: 'Melting changes state without changing chemical identity.' }
+                        { q: 'Which is a physical change?', a: ['Burning wood', 'Souring milk', 'Melting ice', 'Digesting food'], c: 2, e: 'Melting changes state without changing chemical identity.' },
+                        { q: 'What is the molar mass of water (H2O)?', a: ['16 g/mol', '18 g/mol', '20 g/mol', '10 g/mol'], c: 1, e: '2(1) + 16 = 18 g/mol.' },
+                        { q: 'How many moles are in 36 g of H2O?', a: ['2', '1', '18', '36'], c: 0, e: '36 / 18 = 2 moles.' },
+                        { q: 'In 2H2 + O2 -> 2H2O, the H2 to O2 mole ratio is?', a: ['1:2', '1:1', '2:1', '2:2'], c: 2, e: 'The coefficients give a 2 to 1 ratio.' },
+                        { q: 'What is the mass of 1 mole of O2?', a: ['16 g', '8 g', '64 g', '32 g'], c: 3, e: 'Each oxygen atom is 16 g/mol, so O2 is 32 g/mol.' },
+                        { q: 'One mole of any gas at STP occupies?', a: ['22.4 L', '1 L', '10 L', '44.8 L'], c: 0, e: 'Molar volume at STP is 22.4 L.' },
+                        { q: 'To convert mass to moles you?', a: ['Multiply by molar mass', 'Divide by molar mass', 'Add Avogadro number', 'Divide by volume'], c: 1, e: 'Moles equal mass divided by molar mass.' },
+                        { q: 'Which law states that reactant mass equals product mass?', a: ['Ideal gas law', 'Conservation of mass', 'Boyle law', 'Hess law'], c: 1, e: 'Mass is conserved in chemical reactions.' },
+                        { q: 'Which isotope is used for radiocarbon dating?', a: ['Carbon-12', 'Uranium-238', 'Carbon-14', 'Hydrogen-1'], c: 2, e: 'Carbon-14 decays at a known rate.' },
+                        { q: 'Which hydrogen isotope has one neutron?', a: ['Protium', 'Tritium', 'Helium', 'Deuterium'], c: 3, e: 'Deuterium has one neutron and tritium has two.' },
+                        { q: 'Isotopes of an element share the same?', a: ['Atomic number', 'Mass number', 'Neutron count', 'Density'], c: 0, e: 'Same protons but different neutrons.' },
+                        { q: 'An exothermic reaction has a Delta H that is?', a: ['Positive', 'Zero', 'Negative', 'Undefined'], c: 2, e: 'Heat leaves the system, so Delta H is negative.' },
+                        { q: 'An endothermic reaction shows a Delta H that is?', a: ['Positive', 'Negative', 'Zero', 'None'], c: 0, e: 'The system absorbs heat, so Delta H is positive.' },
+                        { q: 'Which is a sign of a chemical change?', a: ['Melting', 'Gas production', 'Tearing', 'Stretching'], c: 1, e: 'A new gas suggests a new substance formed.' },
+                        { q: 'Which is a physical property?', a: ['Flammability', 'Reactivity', 'Density', 'Ability to rust'], c: 2, e: 'Density is a physical property.' },
+                        { q: 'In Q = mc(Delta T), the letter c stands for?', a: ['Concentration', 'Specific heat capacity', 'Molar mass', 'Volume'], c: 1, e: 'c is the specific heat of the substance.' }
                     ],
                     flashcards: [
                         { f: '1 mole equals?', b: '6.022 x 10^23 particles' },
@@ -1164,7 +1360,22 @@
                         { q: 'Which lens bends light inward?', a: ['Concave lens', 'Convex lens', 'Flat mirror', 'Plane glass'], c: 1, e: 'A convex lens is a converging lens.' },
                         { q: 'What is the lens equation?', a: ['F = ma', '1/f = 1/do + 1/di', 'v = u + at', 'Q = mc(Delta T)'], c: 1, e: 'The thin-lens equation links focal length and image/object distance.' },
                         { q: 'What is magnification?', a: ['m = -di / do', 'm = do / di', 'm = f / do', 'm = di + do'], c: 0, e: 'Magnification is the negative ratio of image distance to object distance.' },
-                        { q: 'When does total internal reflection occur?', a: ['From rarer to denser below the critical angle', 'From denser to rarer above the critical angle', 'Only in mirrors', 'Only in vacuum'], c: 1, e: 'It happens when light tries to leave a denser medium beyond the critical angle.' }
+                        { q: 'When does total internal reflection occur?', a: ['From rarer to denser below the critical angle', 'From denser to rarer above the critical angle', 'Only in mirrors', 'Only in vacuum'], c: 1, e: 'It happens when light tries to leave a denser medium beyond the critical angle.' },
+                        { q: 'Which quantity has both magnitude and direction?', a: ['Speed', 'Distance', 'Velocity', 'Time'], c: 2, e: 'Velocity is a vector.' },
+                        { q: 'Distance is classified as a?', a: ['Vector', 'Scalar', 'Force', 'Ratio'], c: 1, e: 'Distance has magnitude only.' },
+                        { q: 'The slope of a distance-time graph gives?', a: ['Velocity', 'Acceleration', 'Force', 'Mass'], c: 0, e: 'Rise over run is distance over time.' },
+                        { q: 'The slope of a velocity-time graph gives?', a: ['Velocity', 'Distance', 'Acceleration', 'Time'], c: 2, e: 'Change in velocity over time is acceleration.' },
+                        { q: 'A car goes from 0 to 20 m/s in 4 s. Its acceleration is?', a: ['4 m/s^2', '5 m/s^2', '20 m/s^2', '80 m/s^2'], c: 1, e: '(20 - 0) / 4 = 5 m/s^2.' },
+                        { q: 'The force on a 10 kg mass accelerating at 2 m/s^2 is?', a: ['5 N', '12 N', '20 N', '0.2 N'], c: 2, e: 'F = ma = 10 x 2 = 20 N.' },
+                        { q: 'At rest, the initial velocity u equals?', a: ['0', '1', 'Negative', 'Infinite'], c: 0, e: 'Rest means u equals 0.' },
+                        { q: 'Which equation finds displacement?', a: ['v = u + at', 's = ut + 0.5at^2', 'F = ma', 'Q = mc(Delta T)'], c: 1, e: 'This equation gives displacement under constant acceleration.' },
+                        { q: 'Which equation links velocity, acceleration, and distance without time?', a: ['v = u + at', 'F = ma', 'v^2 = u^2 + 2as', 's = ut'], c: 2, e: 'It eliminates time from the equations.' },
+                        { q: 'A horizontal distance-time graph means the object is?', a: ['Stationary', 'Speeding up', 'Accelerating', 'Falling'], c: 0, e: 'Constant distance means velocity is 0.' },
+                        { q: 'A real image forms where?', a: ['Rays appear to diverge', 'Light rays actually meet', 'Behind a mirror only', 'At the focal point'], c: 1, e: 'Real images form at the actual ray intersection.' },
+                        { q: 'Which lens spreads light outward?', a: ['Convex lens', 'Plane mirror', 'Concave lens', 'Prism'], c: 2, e: 'A concave lens is diverging.' },
+                        { q: 'Refraction happens because light?', a: ['Changes speed between media', 'Stops completely', 'Becomes sound', 'Loses mass'], c: 0, e: 'A change in speed bends the ray.' },
+                        { q: 'In 1/f = 1/do + 1/di, the letter f stands for?', a: ['Force', 'Frequency', 'Field', 'Focal length'], c: 3, e: 'f is the focal length of the lens.' },
+                        { q: 'If u = 5, a = 2, and t = 3, then v equals?', a: ['6 m/s', '11 m/s', '10 m/s', '30 m/s'], c: 1, e: 'v = u + at = 5 + 2 x 3 = 11 m/s.' }
                     ],
                     flashcards: [
                         { f: 'Final velocity formula?', b: 'v = u + at' },
@@ -1190,7 +1401,22 @@
                         { q: 'Which planet is densest?', a: ['Mercury', 'Earth', 'Jupiter', 'Saturn'], c: 1, e: 'Earth has the greatest average density.' },
                         { q: 'Which planet is hottest because of a greenhouse atmosphere?', a: ['Mercury', 'Venus', 'Mars', 'Neptune'], c: 1, e: 'Venus is hotter than Mercury because of extreme greenhouse trapping.' },
                         { q: 'Which planet has the most eccentric orbit?', a: ['Earth', 'Mars', 'Mercury', 'Uranus'], c: 2, e: 'Mercury has the most elliptical orbit of the planets.' },
-                        { q: 'Which planet rotates on its side?', a: ['Saturn', 'Jupiter', 'Uranus', 'Neptune'], c: 2, e: 'Uranus has an axial tilt of about 98 degrees.' }
+                        { q: 'Which planet rotates on its side?', a: ['Saturn', 'Jupiter', 'Uranus', 'Neptune'], c: 2, e: 'Uranus has an axial tilt of about 98 degrees.' },
+                        { q: 'What drives plate motion?', a: ['Convection currents in the mantle', 'Ocean tides', 'Wind', 'Sunlight'], c: 0, e: 'Mantle convection moves the plates.' },
+                        { q: 'What forms at a convergent boundary?', a: ['Mid-ocean ridges', 'Mountains and subduction zones', 'Flat plains only', 'New oceans only'], c: 1, e: 'Colliding plates create mountains and trenches.' },
+                        { q: 'The San Andreas fault is a?', a: ['Divergent boundary', 'Convergent boundary', 'Transform boundary', 'Hotspot'], c: 2, e: 'Plates slide past each other there.' },
+                        { q: 'In a reverse fault, the hanging wall moves?', a: ['Down', 'Sideways', 'Does not move', 'Up'], c: 3, e: 'Reverse faults form under compression.' },
+                        { q: 'Which volcano type is tall and explosive?', a: ['Stratovolcano', 'Shield', 'Cinder cone', 'Fissure'], c: 0, e: 'Composite volcanoes build tall, layered cones.' },
+                        { q: 'Molten rock is called what after it erupts?', a: ['Ash', 'Lava', 'Magma', 'Pumice'], c: 1, e: 'Magma becomes lava at the surface.' },
+                        { q: 'Which rock type forms from cooling magma?', a: ['Sedimentary', 'Metamorphic', 'Igneous', 'Fossil'], c: 2, e: 'Igneous rocks solidify from molten material.' },
+                        { q: 'Which rock type forms under heat and pressure?', a: ['Igneous', 'Sedimentary', 'Volcanic glass', 'Metamorphic'], c: 3, e: 'Heat and pressure change existing rocks.' },
+                        { q: 'Which rock type forms from lithified sediments?', a: ['Sedimentary', 'Igneous', 'Metamorphic', 'Magma'], c: 0, e: 'Compacting and cementing sediments makes sedimentary rock.' },
+                        { q: 'Streak is?', a: ['A mineral hardness', 'The color of a mineral powder', 'A type of luster', 'A rock crack'], c: 1, e: 'Streak is the powder color on a plate.' },
+                        { q: 'Cleavage in a mineral means it?', a: ['Melts easily', 'Floats on water', 'Breaks along flat planes', 'Attracts magnets'], c: 2, e: 'Cleavage is a tendency to split along planes.' },
+                        { q: 'Which planet is the largest?', a: ['Saturn', 'Earth', 'Neptune', 'Jupiter'], c: 3, e: 'Jupiter is the largest planet.' },
+                        { q: 'Which planet has extensive rings of ice and dust?', a: ['Saturn', 'Mars', 'Venus', 'Mercury'], c: 0, e: 'Saturn has the most visible ring system.' },
+                        { q: 'Which planet orbits closest to the Sun?', a: ['Venus', 'Mercury', 'Earth', 'Mars'], c: 1, e: 'Mercury orbits nearest the Sun.' },
+                        { q: 'Which planet has the Great Red Spot?', a: ['Mars', 'Saturn', 'Jupiter', 'Uranus'], c: 2, e: 'The Great Red Spot is a giant storm on Jupiter.' }
                     ],
                     flashcards: [
                         { f: 'Divergent boundary?', b: 'Plates move apart' },
@@ -1242,7 +1468,7 @@
             </div>
         ));
 
-        const Sidebar = React.memo(({ currentView, setCurrentView, weakSpots, isDarkMode, setIsDarkMode, isOpen, setIsOpen }) => (
+        const Sidebar = React.memo(({ currentView, setCurrentView, weakSpots, isDarkMode, setIsDarkMode, isOpen, setIsOpen, startQuiz, resetMockExam }) => (
             <>
                 <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={() => setIsOpen(false)}></div>
                 <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
@@ -1256,8 +1482,8 @@
                             <NavItem active={currentView === 'dashboard'} onClick={() => { setCurrentView('dashboard'); setIsOpen(false); }} icon="layout" label="Overview" />
                             <NavItem active={currentView === 'library'} onClick={() => { setCurrentView('library'); setIsOpen(false); }} icon="book-open" label="Topic Library" />
                             <NavItem active={currentView === 'flashcards'} onClick={() => { setCurrentView('flashcards'); setIsOpen(false); }} icon="layers" label="Flashcards" />
-                            <NavItem active={currentView === 'quiz'} onClick={() => { setIsOpen(false); if (!quizState.questions.length || quizState.isFinished) startQuiz(null); else setCurrentView('quiz'); }} icon="graduation-cap" label="Quiz" />
-                            <NavItem active={currentView === 'mock'} onClick={() => { setCurrentView('mock'); setIsOpen(false); }} icon="timer" label="Mock Exam" />
+                            <NavItem active={currentView === 'quiz'} onClick={() => { setIsOpen(false); startQuiz(null); }} icon="graduation-cap" label="Quiz" />
+                            <NavItem active={currentView === 'mock'} onClick={() => { resetMockExam(); setCurrentView('mock'); setIsOpen(false); }} icon="timer" label="Mock Exam" />
                             <NavItem active={currentView === 'weak'} onClick={() => { setCurrentView('weak'); setIsOpen(false); }} icon="alert-circle" label="Weak Spots" badge={new Set(weakSpots).size} />
                         </div>
                         <div>
@@ -1310,7 +1536,7 @@
             const startQuiz = (topicId) => {
                 const topic = studyData.topics.find(t => t.id === topicId);
                 const pool = topic ? topic.questions : studyData.topics.flatMap(t => t.questions);
-                const shuffled = pool.sort(() => Math.random() - 0.5).slice(0, 10);
+                const shuffled = shuffle(pool).slice(0, 25).map(shuffleQuestion);
                 setQuizState({
                     topicId,
                     questions: shuffled,
@@ -1321,19 +1547,10 @@
                 });
                 setCurrentView('quiz');
             };
-            
-            // Mock Exam State Persistence
-            const initialMockQuestions = useMemo(() => studyData.topics.flatMap(t => t.questions.sort(() => Math.random() - 0.5).slice(0, 3)).sort(() => Math.random() - 0.5), []);
-            const [mockExamState, setMockExamState] = useState({
-                questions: initialMockQuestions,
-                answers: {},
-                time: initialMockQuestions.length * 60,
-                isFinished: false,
-                showReview: false
-            });
 
             const resetMockExam = () => {
-                const newQuestions = studyData.topics.flatMap(t => t.questions.sort(() => Math.random() - 0.5).slice(0, 3)).sort(() => Math.random() - 0.5);
+                const allQs = studyData.topics.flatMap(t => t.questions);
+                const newQuestions = shuffle(allQs).slice(0, 30).map(shuffleQuestion);
                 setMockExamState({
                     questions: newQuestions,
                     answers: {},
@@ -1342,6 +1559,19 @@
                     showReview: false
                 });
             };
+
+            // Mock Exam State Persistence
+            const [mockExamState, setMockExamState] = useState(() => {
+                const allQs = studyData.topics.flatMap(t => t.questions);
+                const qs = shuffle(allQs).slice(0, 30).map(shuffleQuestion);
+                return {
+                    questions: qs,
+                    answers: {},
+                    time: qs.length * 60,
+                    isFinished: false,
+                    showReview: false
+                };
+            });
 
             useEffect(() => {
                 try {
@@ -1427,7 +1657,7 @@
                                                 </td>
                                                 <td data-label="Category"><span className={`badge ${t.category === 'Math' ? 'badge-purple' : t.category === 'Stats' ? 'badge-orange' : 'badge-blue'}`}>{t.category}</span></td>
                                                 <td data-label="Priority"><span className="text-sm font-medium">{t.priority === 'high' ? '⭐ High' : 'Medium'}</span></td>
-                                                <td><button onClick={() => { if (quizState.topicId === t.id && !quizState.isFinished) setCurrentView('quiz'); else startQuiz(t.id); }} className="btn-pill btn-primary !py-2 !px-6 text-sm">Study</button></td>
+                                                <td><button onClick={() => { startQuiz(t.id); }} className="btn-pill btn-primary !py-2 !px-6 text-sm">Study</button></td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -1499,7 +1729,7 @@
                                 <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-orange-500"><Icon name="zap" /> Memory Aids</h3><div className="p-6 bg-orange-50 dark:bg-orange-900/10 rounded-3xl border border-orange-200 dark:border-orange-900/30 text-orange-800 dark:text-orange-200 italic">"{topic.mnemonics}"</div></section>
                                 {topic.notes?.length > 0 && <section><h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-sky-500"><Icon name="book-marked" /> Reference Notes</h3><div className="space-y-4">{topic.notes.map((note, noteIndex) => (<div key={noteIndex} className="p-6 bg-slate-50 dark:bg-slate-800 rounded-3xl border border-[var(--border)]"><div className="font-bold text-lg mb-4">{note.title}</div><ul className="space-y-3">{note.points.map((point, pointIndex) => (<li key={pointIndex} className="flex items-start gap-3 text-sm text-[var(--text-muted)] leading-relaxed"><span className="w-6 h-6 rounded-full bg-[var(--primary-purple)] text-white flex items-center justify-center text-xs font-bold shrink-0">{pointIndex + 1}</span><span>{point}</span></li>))}</ul>{note.problem && <div className="mt-6 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-900/30"><div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-2">Sample Problem</div><div className="text-sm font-semibold mb-2">{note.problem}</div>{note.solution && <div className="text-sm text-[var(--text-muted)] italic"><span className="font-bold text-indigo-500">Solution:</span> {note.solution}</div>}</div>}</div>))}</div></section>}
                             </div>
-                            <div className="flex gap-4"><button onClick={() => { if (quizState.topicId === topic.id && !quizState.isFinished) setCurrentView('quiz'); else startQuiz(topic.id); }} className="btn-pill btn-primary flex-1 py-4">Take Quiz</button><button onClick={() => setCurrentView('flashcards')} className="btn-pill btn-black flex-1 py-4">Flashcards</button></div>
+                            <div className="flex gap-4"><button onClick={() => { startQuiz(topic.id); }} className="btn-pill btn-primary flex-1 py-4">Take Quiz</button><button onClick={() => setCurrentView('flashcards')} className="btn-pill btn-black flex-1 py-4">Flashcards</button></div>
                         </div>
                     </div>
                 );
@@ -1515,7 +1745,7 @@
                 if (isFinished) return (
                     <div className="max-w-md mx-auto text-center space-y-8 animate-fade-in">
                         <div className="w-32 h-32 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600"><Icon name="check-circle" size={64} /></div>
-                        <h2 className="text-3xl font-bold">Quiz Finished!</h2><div className="text-5xl font-extrabold text-[var(--primary-purple)]">{score}/10</div>
+                        <h2 className="text-3xl font-bold">Quiz Finished!</h2><div className="text-5xl font-extrabold text-[var(--primary-purple)]">{score}/{questions.length}</div>
                         <button onClick={() => { startQuiz(topicId); }} className="btn-pill btn-black w-full py-4">Restart Quiz</button>
                         <button onClick={() => setCurrentView('dashboard')} className="btn-pill btn-primary w-full py-4">Back to Dashboard</button>
                     </div>
@@ -1523,7 +1753,7 @@
 
                 return (
                     <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
-                        <div className="flex justify-between items-center"><div className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest">Question {currentQ + 1} of 10</div><div className="h-2 w-32 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div className="h-full bg-[var(--primary-purple)] transition-all" style={{ width: `${(currentQ + 1) * 10}%` }}></div></div></div>
+                        <div className="flex justify-between items-center"><div className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-widest">Question {currentQ + 1} of {questions.length}</div><div className="h-2 w-32 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div className="h-full bg-[var(--primary-purple)] transition-all" style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}></div></div></div>
                         <div className="card !p-8 space-y-8">
                             <h3 className="text-2xl font-bold">{q.q}</h3>
                             <div className="grid gap-3">{q.a.map((opt, i) => {
@@ -1543,20 +1773,21 @@
                             })}</div>
                             {selectedOpt !== null && <div className="p-6 bg-indigo-50 dark:bg-indigo-900/10 rounded-2xl text-sm leading-relaxed"><span className="font-bold text-[var(--primary-purple)]">Explanation:</span> {q.e}</div>}
                             {selectedOpt !== null && <button onClick={() => { 
-                                if (currentQ < 9) { 
+                                if (currentQ < questions.length - 1) { 
                                     setState(s => ({ ...s, currentQ: s.currentQ + 1, selectedOpt: null }));
                                 } else { 
                                     setState(s => ({ ...s, isFinished: true }));
-                                    onComplete(score + (selectedOpt === q.c ? 1 : 0));
+                                    onComplete(score + (selectedOpt === q.c ? 1 : 0), questions.length);
                                 } 
-                            }} className="btn-pill btn-primary w-full py-4">{currentQ === 9 ? 'Finish Quiz' : 'Next Question'}</button>}
+                            }} className="btn-pill btn-primary w-full py-4">{currentQ === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}</button>}
                         </div>
                     </div>
                 );
             };
 
             const FlashcardsView = () => {
-                const cards = (studyData.topics.find(t => t.id === selectedTopicId) || studyData.topics[0]).flashcards;
+                const topic = studyData.topics.find(t => t.id === selectedTopicId) || studyData.topics[0];
+                const cards = useMemo(() => shuffle(topic.flashcards), [topic.id]);
                 const [idx, setIdx] = useState(0);
                 const [flipped, setFlipped] = useState(false);
                 return (
@@ -1689,6 +1920,8 @@
                         setIsDarkMode={setIsDarkMode} 
                         isOpen={sidebarOpen}
                         setIsOpen={setSidebarOpen}
+                        startQuiz={startQuiz}
+                        resetMockExam={resetMockExam}
                     />
                     <main className="main-content">
                         <TopBar 
@@ -1703,7 +1936,7 @@
                             {currentView === 'library' && <TopicLibrary />}
                             {currentView === 'weak' && <TopicLibrary filterWeak />}
                             {currentView === 'topic-detail' && <TopicDetail />}
-                            {currentView === 'quiz' && <QuizMode state={quizState} setState={setQuizState} onComplete={(score) => setQuizScore(prev => ({ total: prev.total + 10, correct: prev.correct + score }))} />}
+                            {currentView === 'quiz' && <QuizMode state={quizState} setState={setQuizState} onComplete={(score, total) => setQuizScore(prev => ({ total: prev.total + total, correct: prev.correct + score }))} />}
                             {currentView === 'flashcards' && <FlashcardsView />}
                             {currentView === 'mock' && <MockExam state={mockExamState} setState={setMockExamState} onReset={resetMockExam} />}
                         </div>
