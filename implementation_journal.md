@@ -162,4 +162,17 @@ Images looked pixelated when zoomed in the lightbox.
 3. **Adaptive zoom ceiling**: added `maxScaleRef` + `syncMaxScale(img)` on image load, setting max zoom to `clamp(naturalWidth / renderedWidth * 1.75, 2, 8)`. This stops the user from zooming past the pixel budget of the source, keeping text crisp. `clampScale` now reads the ref so the wheel/pinch handlers respect it.
 4. **Verification**: local server 200 for the page and all three JPEGs; browser console clean.
 
+### 2026-11-07: Mobile Close Button for Pointer Lightbox
+
+### Problem
+The lightbox close control was a bare 24px icon with no background, making it hard to see and hard to tap on mobile.
+
+### Implementation Details
+1. **Visible button**: `.pointer-lightbox-close` is now a 46x46 circular button with a translucent dark background, blur, and hover/active states (44px+ is the recommended minimum touch target).
+2. **Safe areas**: positioned with `top: max(16px, env(safe-area-inset-top))` and `right: max(16px, env(safe-area-inset-right))` so it clears notches and rounded corners; a plain `16px` fallback precedes each `max()` for older browsers.
+3. **Zoom bar**: added the same `env(safe-area-inset-bottom)` treatment so it clears the iOS home indicator.
+4. **Accessibility**: added `aria-label="Close image"`; `touch-action: manipulation` and `-webkit-tap-highlight-color: transparent` remove the 300ms delay and tap flash.
+5. **Verification**: local preview reports no browser errors.
+
+
 
