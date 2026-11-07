@@ -174,5 +174,14 @@ The lightbox close control was a bare 24px icon with no background, making it ha
 4. **Accessibility**: added `aria-label="Close image"`; `touch-action: manipulation` and `-webkit-tap-highlight-color: transparent` remove the 300ms delay and tap flash.
 5. **Verification**: local preview reports no browser errors.
 
+### 2026-11-07: Ensure Pointer Lightbox Close Control Is Visible
 
+### Problem
+Mobile screenshot showed the close button background but no visible X, and the lightbox image appeared offset/clipped by its app scroll container.
+
+### Implementation Details
+1. Replaced the close control's Lucide icon with inline SVG so the X renders without depending on icon initialization timing.
+2. Increased the touch target to 52x52px and added a near-black background, visible border, and high stacking order.
+3. Rendered the lightbox through `ReactDOM.createPortal(..., document.body)` so scroll-container clipping cannot affect the fullscreen image or its controls.
+4. Verification: browser console confirmed Lucide did not recognize `x`; updated local app loads successfully with the inline SVG and lightbox portal.
 
