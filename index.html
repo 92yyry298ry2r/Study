@@ -197,6 +197,131 @@
         .badge-orange { background-color: var(--badge-orange-bg); color: var(--badge-orange-text); }
         .badge-purple { background-color: var(--badge-purple-bg); color: var(--badge-purple-text); }
 
+        .pointer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .pointer-card {
+            display: block;
+            width: 100%;
+            padding: 0;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 24px;
+            overflow: hidden;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .pointer-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+        }
+
+        .pointer-card-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            background-color: #0B0B14;
+        }
+
+        .pointer-card-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+        }
+
+        .pointer-lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background-color: rgba(9, 9, 14, 0.85);
+            backdrop-filter: blur(6px);
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .pointer-lightbox-stage {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 24px;
+            touch-action: none;
+        }
+
+        .pointer-lightbox-stage img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 16px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            transform-origin: center center;
+            backface-visibility: hidden;
+            image-rendering: auto;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .pointer-lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 3;
+            color: #FFFFFF;
+            background: none;
+            border: none;
+            cursor: pointer;
+            line-height: 0;
+        }
+
+        .pointer-zoom-bar {
+            position: absolute;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background-color: rgba(20, 20, 30, 0.78);
+            backdrop-filter: blur(6px);
+        }
+
+        .pointer-zoom-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 999px;
+            background: none;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+
+        .pointer-zoom-btn:hover {
+            background-color: rgba(255, 255, 255, 0.16);
+        }
+
+        .pointer-zoom-level {
+            min-width: 52px;
+            text-align: center;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+        }
+
         .topic-table th {
             text-align: left;
             padding: 20px 24px;
@@ -1481,6 +1606,7 @@
                             <div className="section-label text-[10px] font-bold text-[var(--text-muted)] tracking-[0.2em] mb-4 px-4 uppercase">DAILY USE</div>
                             <NavItem active={currentView === 'dashboard'} onClick={() => { setCurrentView('dashboard'); setIsOpen(false); }} icon="layout" label="Overview" />
                             <NavItem active={currentView === 'library'} onClick={() => { setCurrentView('library'); setIsOpen(false); }} icon="book-open" label="Topic Library" />
+                            <NavItem active={currentView === 'pointers'} onClick={() => { setCurrentView('pointers'); setIsOpen(false); }} icon="image" label="Pointers" />
                             <NavItem active={currentView === 'flashcards'} onClick={() => { setCurrentView('flashcards'); setIsOpen(false); }} icon="layers" label="Flashcards" />
                             <NavItem active={currentView === 'quiz'} onClick={() => { setIsOpen(false); startQuiz(null); }} icon="graduation-cap" label="Quiz" />
                             <NavItem active={currentView === 'mock'} onClick={() => { resetMockExam(); setCurrentView('mock'); setIsOpen(false); }} icon="timer" label="Mock Exam" />
@@ -1807,6 +1933,182 @@
                 );
             };
 
+            const Pointers = () => {
+                const images = [
+                    { src: 'Pointers/pointer-1.jpg', title: 'Pointer 1' },
+                    { src: 'Pointers/pointer-2.jpg', title: 'Pointer 2' },
+                    { src: 'Pointers/pointer-3.jpg', title: 'Pointer 3' }
+                ];
+                const MIN_SCALE = 1;
+                const [active, setActive] = useState(null);
+                const [view, setView] = useState({ scale: 1, x: 0, y: 0 });
+                const stageRef = React.useRef(null);
+                const viewRef = React.useRef(view);
+                const ptsRef = React.useRef(new Map());
+                const gestureRef = React.useRef(null);
+                const maxScaleRef = React.useRef(4);
+                viewRef.current = view;
+
+                const clampScale = (s) => Math.min(maxScaleRef.current, Math.max(MIN_SCALE, s));
+
+                const syncMaxScale = (img) => {
+                    if (!img || !img.offsetWidth) return;
+                    const fit = img.naturalWidth / img.offsetWidth;
+                    maxScaleRef.current = Math.min(8, Math.max(2, fit * 1.75));
+                };
+
+                const clampPan = (scale, x, y) => {
+                    const el = stageRef.current;
+                    if (!el) return { x, y };
+                    const r = el.getBoundingClientRect();
+                    const ax = Math.max(0, (scale - 1) * r.width / 2);
+                    const ay = Math.max(0, (scale - 1) * r.height / 2);
+                    return { x: Math.min(ax, Math.max(-ax, x)), y: Math.min(ay, Math.max(-ay, y)) };
+                };
+
+                const relToCenter = (clientX, clientY) => {
+                    const el = stageRef.current;
+                    if (!el) return { cx: 0, cy: 0 };
+                    const r = el.getBoundingClientRect();
+                    return { cx: clientX - (r.left + r.width / 2), cy: clientY - (r.top + r.height / 2) };
+                };
+
+                const zoomAt = (factor, cx, cy) => {
+                    setView(v => {
+                        const s = clampScale(v.scale * factor);
+                        const k = s / v.scale;
+                        const p = clampPan(s, cx - k * (cx - v.x), cy - k * (cy - v.y));
+                        return { scale: s, x: p.x, y: p.y };
+                    });
+                };
+
+                const resetView = () => setView({ scale: 1, x: 0, y: 0 });
+                const openImage = (i) => { resetView(); setActive(i); };
+                const closeImage = () => { setActive(null); resetView(); };
+
+                useEffect(() => {
+                    if (active === null) return;
+                    const el = stageRef.current;
+                    if (!el) return;
+                    const onWheel = (e) => {
+                        e.preventDefault();
+                        const { cx, cy } = relToCenter(e.clientX, e.clientY);
+                        zoomAt(Math.exp(-e.deltaY * 0.0025), cx, cy);
+                    };
+                    const onKey = (e) => { if (e.key === 'Escape') closeImage(); };
+                    el.addEventListener('wheel', onWheel, { passive: false });
+                    window.addEventListener('keydown', onKey);
+                    return () => {
+                        el.removeEventListener('wheel', onWheel);
+                        window.removeEventListener('keydown', onKey);
+                    };
+                }, [active]);
+
+                const onPointerDown = (e) => {
+                    if (e.pointerType === 'mouse' && e.button !== 0) return;
+                    e.currentTarget.setPointerCapture(e.pointerId);
+                    ptsRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                    const pts = [...ptsRef.current.values()];
+                    if (pts.length === 1) {
+                        gestureRef.current = { mode: 'pan', startX: e.clientX, startY: e.clientY, base: { ...viewRef.current } };
+                    } else if (pts.length === 2) {
+                        const [a, b] = pts;
+                        gestureRef.current = {
+                            mode: 'pinch',
+                            startDist: Math.hypot(a.x - b.x, a.y - b.y) || 1,
+                            startMid: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+                            base: { ...viewRef.current }
+                        };
+                    }
+                };
+
+                const onPointerMove = (e) => {
+                    if (!ptsRef.current.has(e.pointerId)) return;
+                    ptsRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+                    const g = gestureRef.current;
+                    if (!g) return;
+                    const pts = [...ptsRef.current.values()];
+                    if (g.mode === 'pinch' && pts.length >= 2) {
+                        const [a, b] = pts;
+                        const factor = (Math.hypot(a.x - b.x, a.y - b.y) || 1) / g.startDist;
+                        const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+                        const s = clampScale(g.base.scale * factor);
+                        const k = s / g.base.scale;
+                        const c0 = relToCenter(g.startMid.x, g.startMid.y);
+                        const c1 = relToCenter(mid.x, mid.y);
+                        const p = clampPan(s, c1.cx - k * (c0.cx - g.base.x), c1.cy - k * (c0.cy - g.base.y));
+                        setView({ scale: s, x: p.x, y: p.y });
+                    } else if (g.mode === 'pan') {
+                        const p = clampPan(g.base.scale, g.base.x + (e.clientX - g.startX), g.base.y + (e.clientY - g.startY));
+                        setView({ scale: g.base.scale, x: p.x, y: p.y });
+                    }
+                };
+
+                const onPointerUp = (e) => {
+                    ptsRef.current.delete(e.pointerId);
+                    const pts = [...ptsRef.current.values()];
+                    if (pts.length === 1) {
+                        gestureRef.current = { mode: 'pan', startX: pts[0].x, startY: pts[0].y, base: { ...viewRef.current } };
+                    } else if (pts.length === 0) {
+                        gestureRef.current = null;
+                    }
+                };
+
+                const onDoubleClick = (e) => {
+                    const { cx, cy } = relToCenter(e.clientX, e.clientY);
+                    if (viewRef.current.scale > 1) resetView();
+                    else zoomAt(2.5, cx, cy);
+                };
+
+                return (
+                    <div className="space-y-8 animate-fade-in">
+                        <div>
+                            <h2 className="text-3xl font-extrabold">Pointers</h2>
+                            <p className="text-[var(--text-muted)] mt-1">{images.length} quick-reference images</p>
+                        </div>
+                        <div className="pointer-grid">
+                            {images.map((img, i) => (
+                                <button key={img.src} className="pointer-card" onClick={() => openImage(i)}>
+                                    <img src={img.src} alt={img.title} loading="lazy" className="pointer-card-img" />
+                                    <div className="pointer-card-foot">
+                                        <span className="font-bold">{img.title}</span>
+                                        <Icon name="maximize-2" size={16} className="text-[var(--text-muted)]" />
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                        {active !== null && (
+                            <div className="pointer-lightbox" onClick={closeImage}>
+                                <div className="pointer-lightbox-stage"
+                                     ref={stageRef}
+                                     onClick={(e) => e.stopPropagation()}
+                                     onPointerDown={onPointerDown}
+                                     onPointerMove={onPointerMove}
+                                     onPointerUp={onPointerUp}
+                                     onPointerCancel={onPointerUp}
+                                     onDoubleClick={onDoubleClick}
+                                >
+                                    <img
+                                        src={images[active].src}
+                                        alt={images[active].title}
+                                        draggable={false}
+                                        onLoad={(e) => syncMaxScale(e.currentTarget)}
+                                        style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})` }}
+                                    />
+                                </div>
+                                <div className="pointer-zoom-bar" onClick={(e) => e.stopPropagation()}>
+                                    <button className="pointer-zoom-btn" onClick={() => zoomAt(1 / 1.4, 0, 0)} title="Zoom out"><Icon name="zoom-out" size={18} /></button>
+                                    <span className="pointer-zoom-level">{Math.round(view.scale * 100)}%</span>
+                                    <button className="pointer-zoom-btn" onClick={() => zoomAt(1.4, 0, 0)} title="Zoom in"><Icon name="zoom-in" size={18} /></button>
+                                    <button className="pointer-zoom-btn" onClick={resetView} title="Reset zoom"><Icon name="rotate-ccw" size={18} /></button>
+                                </div>
+                                <button className="pointer-lightbox-close" onClick={closeImage}><Icon name="x" size={28} /></button>
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+
         const MockTimer = React.memo(({ time }) => (
             <div className="sticky top-[89px] z-20 flex justify-center">
                 <div className="bg-rose-500 text-white px-6 py-2 rounded-full font-mono text-xl font-bold shadow-lg shadow-rose-500/20">
@@ -1934,6 +2236,7 @@
                         <div className="content-area">
                             {currentView === 'dashboard' && <Dashboard />}
                             {currentView === 'library' && <TopicLibrary />}
+                            {currentView === 'pointers' && <Pointers />}
                             {currentView === 'weak' && <TopicLibrary filterWeak />}
                             {currentView === 'topic-detail' && <TopicDetail />}
                             {currentView === 'quiz' && <QuizMode state={quizState} setState={setQuizState} onComplete={(score, total) => setQuizScore(prev => ({ total: prev.total + total, correct: prev.correct + score }))} />}

@@ -117,4 +117,49 @@ Updated the application to perform fresh shuffles every time a topic or exam is 
 3. **Sidebar Sync**:
     - Navigation links now trigger a fresh state reset, preventing stale order persistence between view switches.
  4. **Fixed Navigation Bug**:
-    - Passed `startQuiz` and `resetMockExam` as props to the `Sidebar` component to fix a ReferenceError that prevented the "Mock Exam" and "Quiz" buttons from working.
+   - Passed `startQuiz` and `resetMockExam` as props to the `Sidebar` component to fix a ReferenceError that prevented the "Mock Exam" and "Quiz" buttons from working.
+
+### 2026-11-07: Pointers Section & Image Optimization
+
+### Feature Overview
+Processed the reference images in `Pointers/` and added a new "Pointers" view to the app that displays them in a gallery with a full-screen lightbox.
+
+### Implementation Details
+1. **Image Processing** (Python + Pillow):
+   - Source files were `.jfif` screenshots at 1170x2532 with a pure-black letterbox: 57px on top and 24px on the bottom, content full-bleed horizontally.
+   - Trimmed each image to the content bounding box (scan for first/last row and column above a near-black threshold of 12) and re-encoded as progressive, optimized JPEGs at quality 85.
+   - Output: `Pointers/pointer-1.jpg` (1170x2451), `pointer-2.jpg`, `pointer-3.jpg`. Original `.jfif` files were left in place.
+2. **New Component**: Added `Pointers` inside `App`, rendering a responsive `pointer-grid` of `pointer-card` buttons; clicking a card opens a `pointer-lightbox` overlay.
+3. **New Styles**: Added `.pointer-grid`, `.pointer-card`, `.pointer-card-img`, `.pointer-card-foot`, `.pointer-lightbox`, `.pointer-lightbox-close` to the embedded stylesheet so the cards do not inherit the default `.card` padding.
+4. **Navigation**: Added a "Pointers" `NavItem` (icon `image`) under DAILY USE and the `{currentView === 'pointers' && <Pointers />}` render branch.
+5. **Verification**: Served the directory locally; `index.html` and all three JPEGs return HTTP 200.
+
+### 2026-11-07: Pointer Lightbox Zoom & Mobile Gestures
+
+### Feature Overview
+Added zoom, pan, and pinch support to the Pointer lightbox so the reference images can be inspected closely on both desktop and mobile.
+
+### Implementation Details
+1. **View State**: `view = { scale, x, y }` drives a CSS `transform: translate(x, y) scale(scale)` on the lightbox image, with `transform-origin: center center`.
+2. **Anchored Zoom**: `zoomAt(factor, cx, cy)` keeps the pointer position fixed while scaling (`x' = cx - (s'/s) * (cx - x)`), and `clampPan` limits translation to the scaled overflow so the image cannot be dragged off screen.
+3. **Desktop**: non-passive `wheel` listener (registered via `useEffect` + `addEventListener` so `preventDefault` works) zooms toward the cursor; drag pans; double-click toggles between 1x and 2.5x.
+4. **Mobile**: `touch-action: none` on the stage plus Pointer Events. Two active pointers drive a pinch gesture (distance ratio → scale, midpoint → anchor), one pointer pans. Pointer capture keeps the gesture alive outside the element.
+5. **Controls**: On-screen zoom bar with zoom-out / live percentage / zoom-in / reset, plus `Escape` to close and a blurred backdrop click to dismiss.
+6. **Verification**: Served locally; browser console reports no errors.
+
+### 2026-11-07: Pointer Image Sharpness Fix
+
+### Problem
+Images looked pixelated when zoomed in the lightbox.
+
+### Diagnosis
+1. Source images are native iPhone screenshots (1170x2532), not upscaled: 92% of horizontal neighbours are identical, which matches a mostly-flat black background rather than nearest-neighbour block replication.
+2. Two real causes: (a) the JPEGs were encoded at quality 85 with default 4:2:0 chroma subsampling, which smears synthetic text edges; (b) the image had `will-change: transform`, so the browser cached a raster at layout size and scaled that low-res bitmap during zoom.
+
+### Implementation Details
+1. **Re-encoded images**: q95, `subsampling=0` (4:4:4), progressive, optimized. Sizes 227 / 207 / 285 KB.
+2. **CSS**: removed `will-change: transform` (added `backface-visibility: hidden`, explicit `image-rendering: auto`) so the browser re-rasterizes at the final scale.
+3. **Adaptive zoom ceiling**: added `maxScaleRef` + `syncMaxScale(img)` on image load, setting max zoom to `clamp(naturalWidth / renderedWidth * 1.75, 2, 8)`. This stops the user from zooming past the pixel budget of the source, keeping text crisp. `clampScale` now reads the ref so the wheel/pinch handlers respect it.
+4. **Verification**: local server 200 for the page and all three JPEGs; browser console clean.
+
+

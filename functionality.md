@@ -1,6 +1,6 @@
 # StudySystem Webapp Functionality Summary
 
-Detailed breakdown of all features in the [study_app.html](file:///e:/Users/admin/Desktop/Study/study_app.html) application.
+Detailed breakdown of all features in the [index.html](file:///e:/Users/admin/Desktop/Study/index.html) application.
 
 ## 1. Dashboard (Overview)
 - **Stats Tracking**: Visual cards for Days Left, Overall Progress %, Weak Spots count, and Quiz Accuracy %.
@@ -19,14 +19,15 @@ Detailed breakdown of all features in the [study_app.html](file:///e:/Users/admi
 - **Topic-Specific Decks**: Ability to study flashcards for a specific topic or all topics combined.
 
 ## 4. Quiz Mode
-- **Randomized Testing**: Generates 10-question sets from a topic or mixed pool.
+- **Randomized Testing**: Generates 25-question sets (the full question bank for a topic) from a topic or mixed pool.
+- **Fresh Shuffle**: Question order and answer-option order are re-randomized every time a topic is opened.
 - **Instant Feedback**: Immediate correct/incorrect status with detailed explanations for every answer.
 - **Scoring**: Accuracy tracking that feeds back into the Dashboard.
 - **Weak Spot Integration**: Wrong answers automatically flag topics for the Weak Spot Tracker.
 
 ## 5. Mock Exam
-- **Timed Simulation**: 60-minute countdown timer with a sticky UI.
-- **Full Coverage**: Randomized questions from every topic in the database.
+- **Timed Simulation**: 30 questions drawn from the full 350-question pool (14 topics x 25) with a 30-minute countdown timer and a sticky UI.
+- **Full Coverage**: Randomly sampled across every topic in the database, reshuffled on each start.
 - **Post-Exam Review**: Detailed score breakdown and list of questions to review.
 
 ## 6. Weak Spot Tracker
@@ -43,3 +44,8 @@ Detailed breakdown of all features in the [study_app.html](file:///e:/Users/admi
 - **Light/Dark Mode**: Full-app theme switching (Shell, Sidebar, Cards, Tables) with `prefers-color-scheme` support.
 - **Responsive Design**: Collapsible sidebar for desktop and mobile-optimized layout.
 - **Visual Feedback**: Smooth transitions, hover effects, and accessible color contrast.
+
+## 9. Pointers
+- **Image Gallery**: Displays the trimmed quick-reference images from the `Pointers/` folder in a responsive card grid.
+- **Lightbox Viewer**: Click any card to open a full-screen, blurred-backdrop overlay; click the backdrop or close button to dismiss.
+- **Self-Contained Assets**: Images are stored as optimized JPEGs in `Pointers/` and referenced by relative path.
